@@ -2,6 +2,7 @@ let supabase = null
     let cloudUser = null
     let cloudProfile = null
     let realtimeChannel = null
+    let notificationChannel = null
     let cloudConfigured = false
     const config = window.SKILLXCHANGE_CONFIG || {}
 
@@ -281,6 +282,17 @@ function field({
 const brandMarkup = '<img class="brand-mark" src="logo.svg" alt="" aria-hidden="true" /><span class="brand-name">Skill<span class="brand-light">X</span>Change</span>'
     const themeButton = () => `<button class="icon-btn" data-action="toggle-theme" aria-label="Switch color theme">${icon(state.theme === 'dark' ? 'light_mode' : 'dark_mode')}</button>`
 
+function notificationButton() {
+    if (!notificationsSupported())
+        return ''
+        const permission = Notification.permission
+        const granted = permission === 'granted'
+        const blocked = permission === 'denied'
+        const label = granted ? 'Message notifications are on' : blocked ? 'Notifications are blocked in browser settings' : 'Enable message notifications'
+        const glyph = granted ? 'notifications_active' : blocked ? 'notifications_off' : 'notifications'
+        return `<button class="icon-btn" data-action="enable-notifications" aria-label="${label}" title="${label}">${icon(glyph, granted ? 'filled-icon' : '')}</button>`
+}
+
 function topBar() {
     const titles = {
         discover: 'Discover',
@@ -288,7 +300,7 @@ function topBar() {
         chats: 'Messages',
         profile: 'Your profile'
     }
-    return `<header class="top-app-bar"><img class="brand-mark" src="logo.svg" alt="" aria-hidden="true" /><h1>${titles[state.page] || 'Discover'}</h1><div class="top-actions">${themeButton()}<button class="profile-shortcut" data-action="navigate" data-page="profile" aria-label="Open your profile">${avatar(state.profile, 'avatar-small')}</button></div></header>`
+    return `<header class="top-app-bar"><img class="brand-mark" src="logo.svg" alt="" aria-hidden="true" /><h1>${titles[state.page] || 'Discover'}</h1><div class="top-actions">${themeButton()}${notificationButton()}<button class="profile-shortcut" data-action="navigate" data-page="profile" aria-label="Open your profile">${avatar(state.profile, 'avatar-small')}</button></div></header>`
 }
 
 function authView() {
@@ -971,6 +983,7 @@ async function loadCloudData() {
     if (!state.conversations.some((conversation) => conversation.id === state.activeConversation))
         state.activeConversation = state.conversations[0]?.id || null
             state.mode = 'app'
+            initializeNotifications()
 }
 
 async function handleAuth(form) {
@@ -1293,6 +1306,10 @@ async function logout() {
             await supabase.removeChannel(realtimeChannel);
             realtimeChannel = null
         }
+        if (notificationChannel && supabase) {
+            await supabase.removeChannel(notificationChannel);
+            notificationChannel = null
+        }
     cloudUser = null;
     cloudProfile = null
         state.isDemo = false;
@@ -1300,6 +1317,129 @@ async function logout() {
     state.authMode = 'signin';
     state.profile = null
         render()
+}
+
+const NOTIFICATION_PROMPT_KEY = 'skillxchange-notification-prompted'
+
+function notificationsSupported() {
+    return typeof window !== 'undefined' && 'Notification' in window
+}
+
+async function requestNotificationPermission({
+    manual = false
+} = {}) {
+    if (!notificationsSupported()) {
+        if (manual)
+            showToast('This browser does not support notifications.', 'error')
+            return 'unsupported'
+    }
+    const permission = Notification.permission
+    if (permission === 'granted') {
+        subscribeToNotifications()
+            if (manual)
+                showToast('Message notifications are already on.')
+                return permission
+    }
+    if (permission === 'denied') {
+        if (manual)
+            showToast('Notifications are blocked. Allow them for this site in your browser settings.', 'error')
+            return permission
+    }
+    if (!manual && sessionStorage.getItem(NOTIFICATION_PROMPT_KEY))
+        return permission
+        sessionStorage.setItem(NOTIFICATION_PROMPT_KEY, '1')
+        try {
+            const result = await Notification.requestPermission()
+            if (result === 'granted') {
+                subscribeToNotifications()
+                    if (state.mode === 'app')
+                        render()
+                        showToast('Message notifications are on.')
+            } else if (manual) {
+                showToast('Notifications were not enabled.', 'error')
+            }
+            return result
+        } catch (error) {
+            console.warn('Could not request notification permission.', error)
+            if (manual)
+                showToast('Could not ask for notification permission.', 'error')
+                return permission
+        }
+}
+
+function initializeNotifications() {
+    if (!notificationsSupported())
+        return
+        if (Notification.permission === 'granted') {
+            subscribeToNotifications()
+            return
+        }
+    if (Notification.permission === 'default' && !sessionStorage.getItem(NOTIFICATION_PROMPT_KEY))
+        requestNotificationPermission()
+}
+
+function subscribeToNotifications() {
+    if (!supabase || !cloudUser || !notificationsSupported() || Notification.permission !== 'granted')
+        return
+        if (notificationChannel)
+            supabase.removeChannel(notificationChannel)
+            notificationChannel = supabase.channel('message-notifications').on('postgres_changes', {
+                event: 'INSERT',
+                schema: 'public',
+                table: 'messages',
+            }, (payload) => handleIncomingNotification(payload.new)).subscribe()
+}
+
+function handleIncomingNotification(message) {
+    if (!message || message.sender_id === cloudUser?.id || state.mode !== 'app')
+        return
+        appendMessageToChat(message, message.conversation_id)
+        if (!document.hidden && document.hasFocus())
+            return
+        if (!notificationsSupported() || Notification.permission !== 'granted')
+            return
+            const conversation = state.conversations.find((item) => item.id === message.conversation_id)
+            const person = personById(message.sender_id) || personById(conversation?.personId)
+            const name = person?.name || 'SkillXChange'
+            const preview = gifUrlFromMessage(message.body) ? 'Sent a GIF' : (message.body || 'New message')
+            try {
+                const notification = new Notification(`New message from ${name}`, {
+                    body: preview.length > 120 ? `${preview.slice(0, 117)}…` : preview,
+                    icon: new URL('logo.svg', window.location.href).href,
+                    tag: message.conversation_id,
+                    renotify: true,
+                })
+                notification.onclick = () => {
+                    window.focus()
+                    openConversationFromNotification(message.conversation_id)
+                    notification.close()
+                }
+            } catch (error) {
+                console.warn('Could not show a message notification.', error)
+            }
+}
+
+async function openConversationFromNotification(conversationId) {
+    if (!conversationId)
+        return
+        if (!state.conversations.some((conversation) => conversation.id === conversationId)) {
+            try {
+                await loadCloudData()
+            } catch (error) {
+                console.warn('Could not open the conversation from this notification.', error)
+                return
+            }
+        }
+        if (!state.conversations.some((conversation) => conversation.id === conversationId))
+            return
+            state.page = 'chats'
+            state.activeConversation = conversationId
+            state.chatListOpen = false
+            state.modal = ''
+            state.deleteTarget = null
+            render()
+            subscribeToMessages()
+            document.querySelector('#message-form input[name="message"]')?.focus()
 }
 
 function subscribeToMessages() {
@@ -1410,6 +1550,10 @@ document.addEventListener('click', async(event) => {
             setTheme(state.theme === 'dark' ? 'light' : 'dark');
             render()
         }
+        if (action === 'enable-notifications')
+            requestNotificationPermission({
+                manual: true
+            })
         if (action === 'auth-mode') {
             state.authMode = button.dataset.mode;
             render()
@@ -1582,6 +1726,10 @@ async function start() {
                     }
             } else if (!sessionState?.user && !state.isDemo) {
                 cloudUser = null
+                    if (notificationChannel && supabase) {
+                        supabase.removeChannel(notificationChannel)
+                        notificationChannel = null
+                    }
                     if (state.mode === 'app') {
                         state.mode = 'auth';
                         render()

@@ -341,7 +341,7 @@ function authView() {
         <button class="btn btn-filled btn-block auth-submit" type="submit" ${state.busy ? 'disabled' : ''}>${state.busy ? '<span class="spinner"></span> One moment…' : signup ? 'Create account' : 'Sign in'}</button>
       </form>
       <div class="auth-divider"><span>or</span></div>
-      <button class="btn btn-outlined btn-block google-button" data-action="google-auth" ${state.oauthBusy ? 'disabled' : ''}>${state.oauthBusy ? '<span class="spinner"></span> Connecting to Google…' : '<span class="google-g" aria-hidden="true">G</span> Continue with Google'}</button>
+      <button class="btn btn-outlined btn-block google-button" data-action="google-auth" ${state.oauthBusy ? 'disabled' : ''}>${state.oauthBusy ? '<span class="spinner"></span> Connecting to Google…' : '<img src="google.webp" height="19px" \\> Continue with Google'}</button>
       <div class="auth-switch">${signup ? 'Already part of the exchange?' : 'New to SkillXChange?'} <button class="btn btn-text" data-action="auth-mode" data-mode="${signup ? 'signin' : 'signup'}">${signup ? 'Sign in' : 'Create account'}</button></div>
       <div class="demo-card">${icon('auto_awesome')} <span>Just looking around? <button class="btn btn-text" data-action="demo-login">Explore the demo</button></span></div>
       ${!cloudConfigured ? '<p class="setup-note">Demo mode is ready. Add Supabase credentials in <code>config.js</code> to enable real accounts and sync.</p>' : '<p class="setup-note">Use your campus email to find students in your learning community.</p>'}

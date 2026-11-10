@@ -8,12 +8,15 @@ create table if not exists public.profiles (
   program text not null default '',
   year text not null default '',
   bio text not null default '',
+  avatar_url text not null default '',
   offers text[] not null default '{}',
   wants text[] not null default '{}',
   availability text[] not null default '{}',
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+alter table public.profiles add column if not exists avatar_url text not null default '';
 
 create table if not exists public.swap_requests (
   id uuid primary key default gen_random_uuid(),

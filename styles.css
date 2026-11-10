@@ -2507,6 +2507,12 @@ Adaptive layout (Material window size classes)
         padding-bottom: var(--navbar-h);
         overflow: hidden;
     }
+    .chat-thread-open .nav-bar {
+        display: none;
+    }
+    .chat-thread-open .app-body {
+        padding-bottom: 0;
+    }
     .chat-app-shell .main-content.chat-main-content {
         flex: 1;
         min-height: 0;

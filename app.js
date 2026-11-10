@@ -618,7 +618,7 @@ function pageContent() {
 function appView() {
     const pending = state.requests.filter((request) => request.direction === 'received' && request.status === 'pending').length
         const items = navItems.map((item) => navItem(item, pending)).join('')
-        return `<div class="app-shell ${state.page === 'chats' ? 'chat-app-shell' : ''}"><nav class="nav-rail" aria-label="Primary"><button class="nav-brand" data-action="navigate" data-page="discover" aria-label="SkillXChange home">${brandMarkup}</button><button class="fab nav-fab" data-action="navigate" data-page="profile" aria-label="Add your skills">${icon('edit')}<span class="nav-fab-label">Add your skills</span></button><div class="nav-list">${items}</div></nav>
+        return `<div class="app-shell ${state.page === 'chats' ? 'chat-app-shell' : ''} ${state.page === 'chats' && !state.chatListOpen ? 'chat-thread-open' : ''}"><nav class="nav-rail" aria-label="Primary"><button class="nav-brand" data-action="navigate" data-page="discover" aria-label="SkillXChange home">${brandMarkup}</button><button class="fab nav-fab" data-action="navigate" data-page="profile" aria-label="Add your skills">${icon('edit')}<span class="nav-fab-label">Add your skills</span></button><div class="nav-list">${items}</div></nav>
     <div class="app-body">${topBar()}<main class="main-content ${state.page === 'chats' ? 'chat-main-content' : ''}"><div class="main-inner">${pageContent()}</div></main></div>
     <nav class="nav-bar" aria-label="Primary">${items}</nav>${state.modal ? modalView() : ''}</div>`
 }
@@ -925,8 +925,20 @@ async function loadCloudData() {
                         throw created.error
                         cloudProfile = created.data
             }
+            const googleAvatar = cloudUser.user_metadata?.avatar_url || cloudUser.user_metadata?.picture || ''
             state.profile = profileFromRow(cloudProfile)
-            state.profile.avatarUrl = cloudUser.user_metadata?.avatar_url || cloudUser.user_metadata?.picture || state.profile.avatarUrl
+            state.profile.avatarUrl = googleAvatar || state.profile.avatarUrl
+            if (googleAvatar && cloudProfile.avatar_url !== googleAvatar) {
+                const { error } = await supabase.from('profiles').update({
+                    avatar_url: googleAvatar
+                }).eq('id', uid)
+                if (error) {
+                    if (!/avatar_url/i.test(error.message || ''))
+                        console.warn('Could not sync your Google profile photo.', error)
+                } else {
+                    cloudProfile.avatar_url = googleAvatar
+                }
+            }
             state.people = (peopleResult.data || []).map(profileFromRow)
             const peopleMap = new Map(state.people.map((person) => [person.id, person]))
             state.requests = (requestResult.data || []).map((row) => {

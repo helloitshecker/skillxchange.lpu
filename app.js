@@ -157,6 +157,7 @@ const state = {
     authMode: 'signin',
     requestTab: 'received',
     theme: localStorage.getItem('skillxchange-theme') || 'light',
+    heroDismissed: localStorage.getItem('skillxchange-hero-dismissed') === '1',
     demo: readSaved(),
     isDemo: false,
     profile: null,
@@ -442,8 +443,9 @@ function discoverPage() {
             return matchesCategory && matchesQuery
     })
         const best = filtered.filter((person) => matchingSkills(person).theyCanTeach && matchingSkills(person).youCanTeach).length
+        const hero = state.heroDismissed ? '' : `<div class="hero"><button class="icon-btn hero-dismiss" type="button" data-action="dismiss-hero" aria-label="Remove this welcome card" title="Remove this card">${icon('close')}</button><div class="hero-copy"><span class="label-text">A little know-how goes a long way</span><h2>What do you want to <em>learn this semester?</em></h2><p>Find a peer who can teach it. Offer something you know in return.</p></div><div class="hero-art" aria-hidden="true">${icon('school')}</div></div>`
         return `<div class="discover-layout"><section class="discover-main">
-    <div class="hero"><div class="hero-copy"><span class="label-text">A little know-how goes a long way</span><h2>What do you want to <em>learn this semester?</em></h2><p>Find a peer who can teach it. Offer something you know in return.</p></div><div class="hero-art" aria-hidden="true">${icon('school')}</div></div>
+    ${hero}
     <form class="search-bar" id="search-form" role="search"><button class="icon-btn" type="submit" aria-label="Search">${icon('search')}</button><input id="skill-search" type="search" value="${esc(state.search)}" placeholder="Search skills, subjects, or students" aria-label="Search skills, subjects, or students" autocomplete="off" />${state.search ? `<button class="icon-btn" type="button" data-action="clear-search" aria-label="Clear search">${icon('close')}</button>` : ''}</form>
     <div class="filter-row"><div class="category-list" role="group" aria-label="Filter by category">${categories.map((category) => {
             const on = state.category === category;
@@ -1407,6 +1409,12 @@ document.addEventListener('click', async(event) => {
             render()
         }
         if (action === 'next-quote') showNextQuote()
+        if (action === 'dismiss-hero') {
+            state.heroDismissed = true
+            localStorage.setItem('skillxchange-hero-dismissed', '1')
+            render()
+            showToast('Welcome card removed. It won’t show again on this device.')
+        }
         if (action === 'delete-message') requestMessageDelete(button)
         if (action === 'confirm-delete-message') deleteMessage()
         if (action === 'open-gif-picker') openGifPicker()

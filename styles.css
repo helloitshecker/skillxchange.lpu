@@ -1081,6 +1081,25 @@ App shell:navigation bar / rail / drawer + top app bar
     background:var(--md-sys-color-primary-container);
     color:var(--md-sys-color-on-primary-container);
 }
+.hero-dismiss {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 2;
+    background: color-mix(in srgb, var(--md-sys-color-on-primary-container) 10%, transparent);
+    color: var(--md-sys-color-on-primary-container);
+    opacity: 0;
+    transition: opacity var(--md-motion-short2) linear;
+}
+.hero:hover .hero-dismiss,
+.hero-dismiss:focus-visible {
+    opacity: 1;
+}
+@media (hover: none) {
+    .hero-dismiss {
+        opacity: 1;
+    }
+}
 .hero-copy {
     position: relative;
     z-index: 1;

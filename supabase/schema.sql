@@ -189,6 +189,16 @@ for insert to authenticated with check (
   )
 );
 
+drop policy if exists "Authors can delete their own messages" on public.messages;
+create policy "Authors can delete their own messages" on public.messages
+for delete to authenticated using (
+  sender_id = (select auth.uid()) and exists (
+    select 1 from public.conversations c
+    where c.id = conversation_id
+      and (c.member_1 = (select auth.uid()) or c.member_2 = (select auth.uid()))
+  )
+);
+
 -- Enable message INSERT events for Supabase Realtime (safe to rerun).
 do $$
 begin

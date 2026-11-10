@@ -180,6 +180,8 @@ const state = {
     category: 'All',
     modal: '',
     modalPerson: null,
+    deleteTarget: null,
+    deletingMessage: false,
     busy: false,
     oauthBusy: false,
     toastTimer: null,
@@ -523,7 +525,10 @@ function messageRowMarkup(message, person) {
         const content = gifUrl
             ? `<img class="message-gif" src="${esc(gifUrl)}" alt="GIF shared from GIPHY" loading="lazy" decoding="async" />`
             : `<p>${esc(message.body)}</p>`
-        return `<div class="message-row ${own ? 'own' : ''}" data-message-id="${esc(message.id)}">${!own ? avatar(person, 'avatar-tiny') : ''}<div class="message-bubble ${gifUrl ? 'gif-bubble' : ''}">${content}<time>${formatTime(message.created_at)}</time></div></div>`
+        const deleteButton = own
+            ? `<button class="icon-btn message-delete" type="button" data-action="delete-message" data-message-id="${esc(message.id)}" aria-label="Delete your message" title="Delete message">${icon('delete')}</button>`
+            : ''
+        return `<div class="message-row ${own ? 'own' : ''}" data-message-id="${esc(message.id)}" data-conversation="${esc(message.conversation_id || state.activeConversation || '')}">${!own ? avatar(person, 'avatar-tiny') : ''}<div class="message-bubble ${gifUrl ? 'gif-bubble' : ''} ${own ? 'has-delete-control' : ''}">${content}${deleteButton}<time>${formatTime(message.created_at)}</time></div></div>`
 }
 
 function messageThread(conversation) {
@@ -632,6 +637,9 @@ function modalView() {
                         : ''
             return dialogShell(`<div class="gif-picker-header"><div><h2 id="gif-picker-title">Choose a GIF</h2><p>Search GIPHY to add a little expression.</p></div><button class="icon-btn modal-close" type="button" data-action="close-modal" aria-label="Close GIF picker">${icon('close')}</button></div><form id="gif-search-form" class="gif-search-form"><input type="search" name="query" maxlength="50" value="${esc(state.gifSearch)}" placeholder="Search GIFs" aria-label="Search GIPHY GIFs" /><button class="btn btn-tonal" type="submit">${icon('search')}Search</button></form><div class="gif-results" id="gif-results" aria-live="polite">${results || feedback}</div><div class="gif-powered-by">Powered by <strong>GIPHY</strong></div>`, 'gif-picker-title', 'gif-picker-modal')
         }
+        if (state.modal === 'confirm-delete-message') {
+            return dialogShell(`<div class="modal-icon delete-modal-icon">${icon('delete')}</div><h2 id="delete-message-title">Delete this message?</h2><p class="modal-lead">This removes the message from this chat and can’t be undone.</p><div class="dialog-actions"><button class="btn btn-text modal-close" type="button" data-action="close-modal" ${state.deletingMessage ? 'disabled' : ''}>Keep message</button><button class="btn btn-filled btn-delete-confirm" type="button" data-action="confirm-delete-message" ${state.deletingMessage ? 'disabled' : ''}>${state.deletingMessage ? '<span class="spinner"></span>Deleting…' : 'Delete message'}</button></div>`, 'delete-message-title')
+        }
         if (state.modal === 'ask') {
             const myOffers = state.profile?.offers || []
                 const theirOffers = person.offers || []
@@ -733,6 +741,82 @@ async function searchGifs(query = '') {
             state.gifLoading = false
             if (state.modal === 'gif-picker') render()
         }
+    }
+}
+
+function requestMessageDelete(button) {
+    const row = button.closest('.message-row')
+    const messageId = button.dataset.messageId
+    const conversationId = row?.dataset.conversation
+    const message = (state.messages[conversationId] || []).find((item) => String(item.id) === String(messageId))
+    const myId = state.isDemo ? state.profile?.id : cloudUser?.id
+    const isOwnMessage = message && (message.sender_id === myId || (state.isDemo && message.sender_id === 'demo-student'))
+
+    if (!isOwnMessage) {
+        showToast('You can only delete your own messages.', 'error')
+        return
+    }
+
+    state.deleteTarget = { messageId, conversationId }
+    state.modal = 'confirm-delete-message'
+    render()
+}
+
+async function deleteMessage() {
+    const target = state.deleteTarget
+    if (!target || state.deletingMessage) return
+
+    const messages = state.messages[target.conversationId] || []
+    const message = messages.find((item) => String(item.id) === String(target.messageId))
+    const myId = state.isDemo ? state.profile?.id : cloudUser?.id
+    const isOwnMessage = message && (message.sender_id === myId || (state.isDemo && message.sender_id === 'demo-student'))
+    if (!isOwnMessage) {
+        state.modal = ''
+        state.deleteTarget = null
+        render()
+        showToast('That message can no longer be deleted.', 'error')
+        return
+    }
+
+    state.deletingMessage = true
+    render()
+    try {
+        if (state.isDemo) {
+            const demoMessages = state.demo.messages[target.conversationId] || []
+            state.demo.messages[target.conversationId] = demoMessages.filter((item) => String(item.id) !== String(target.messageId))
+            state.messages[target.conversationId] = clone(state.demo.messages[target.conversationId])
+        } else {
+            const { data, error } = await supabase.from('messages')
+                .delete()
+                .eq('id', target.messageId)
+                .eq('conversation_id', target.conversationId)
+                .eq('sender_id', cloudUser.id)
+                .select('id')
+                .maybeSingle()
+            if (error) throw error
+            if (!data) throw new Error('Message could not be deleted. Check your connection or refresh the chat.')
+            state.messages[target.conversationId] = messages.filter((item) => String(item.id) !== String(target.messageId))
+        }
+
+        const latest = state.messages[target.conversationId]?.at(-1)
+        const conversation = state.conversations.find((item) => item.id === target.conversationId)
+        if (conversation) {
+            conversation.last_message = latest?.body || ''
+            if (latest?.created_at) conversation.updated_at = latest.created_at
+        }
+        if (state.isDemo) {
+            state.demo.conversations = clone(state.conversations)
+            persistDemo()
+        }
+
+        state.modal = ''
+        state.deleteTarget = null
+        showToast('Message deleted.')
+    } catch (error) {
+        showToast(error.message || 'Message could not be deleted.', 'error')
+    } finally {
+        state.deletingMessage = false
+        render()
     }
 }
 
@@ -1297,6 +1381,7 @@ document.addEventListener('click', async(event) => {
             state.page = button.dataset.page
                 state.chatListOpen = state.page === 'chats'
                 state.modal = ''
+                state.deleteTarget = null
                 render()
                 if (state.page === 'chats')
                     subscribeToMessages()
@@ -1321,6 +1406,8 @@ document.addEventListener('click', async(event) => {
             render()
         }
         if (action === 'next-quote') showNextQuote()
+        if (action === 'delete-message') requestMessageDelete(button)
+        if (action === 'confirm-delete-message') deleteMessage()
         if (action === 'open-gif-picker') openGifPicker()
         if (action === 'send-gif') {
             const url = giphyMediaUrl(button.dataset.gifUrl)
@@ -1367,6 +1454,7 @@ document.addEventListener('click', async(event) => {
                 return
                 state.modal = '';
             state.modalPerson = null;
+            state.deleteTarget = null
             render()
         }
         if (action === 'request-tab') {

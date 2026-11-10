@@ -139,6 +139,11 @@ const demoSeed = {
 }
 
 const clone = (value) => JSON.parse(JSON.stringify(value))
+const fallbackQuotes = [
+    { quote: 'Knowledge grows when it gets passed around.', author: 'The SkillXChange way' },
+    { quote: 'Learning is a treasure that will follow its owner everywhere.', author: 'Chinese proverb' },
+    { quote: 'Wisdom begins in wonder.', author: 'Socrates' },
+]
 const readSaved = () => {
     try {
         return JSON.parse(localStorage.getItem('skillxchange-demo')) || clone(demoSeed)
@@ -161,6 +166,11 @@ const state = {
     messages: {},
     activeConversation: null,
     chatListOpen: false,
+    quotes: fallbackQuotes,
+    quoteIndex: 0,
+    currentQuote: fallbackQuotes[0],
+    quoteLoading: false,
+    quoteLoadAttempted: false,
     search: '',
     category: 'All',
     modal: '',
@@ -364,6 +374,57 @@ function personCard(person) {
   </article>`
 }
 
+const QUOTE_CDN_URL = 'https://cdn.jsdelivr.net/gh/Zachatoo/quotes-database@main/quotes.json'
+
+function updateQuoteCard() {
+    const quoteText = document.querySelector('.quote-text')
+    const quoteAuthor = document.querySelector('.quote-author')
+    if (!quoteText || !quoteAuthor) return
+    quoteText.textContent = state.currentQuote.quote
+    quoteAuthor.textContent = state.currentQuote.author || 'Unknown author'
+}
+
+function showNextQuote() {
+    if (!state.quotes.length) return
+    let nextIndex = Math.floor(Math.random() * state.quotes.length)
+    if (state.quotes.length > 1 && nextIndex === state.quoteIndex) {
+        nextIndex = (nextIndex + 1) % state.quotes.length
+    }
+    state.quoteIndex = nextIndex
+    state.currentQuote = state.quotes[nextIndex]
+    updateQuoteCard()
+}
+
+async function loadQuoteCollection() {
+    if (state.quoteLoadAttempted) return
+    state.quoteLoadAttempted = true
+    state.quoteLoading = true
+    try {
+        const response = await fetch(QUOTE_CDN_URL, { cache: 'force-cache' })
+        if (!response.ok) throw new Error(`Quote CDN returned ${response.status}`)
+        const payload = await response.json()
+        const items = Array.isArray(payload) ? payload : payload.quotes
+        const quotes = (Array.isArray(items) ? items : [])
+            .map((item) => ({
+                quote: String(item.quote || item.quoteText || '').trim(),
+                author: String(item.author || item.quoteAuthor || '').trim(),
+            }))
+            .filter((item) => item.quote)
+        if (!quotes.length) throw new Error('The quote CDN returned no quotes.')
+        state.quotes = [...new Map(quotes.map((item) => [item.quote, item])).values()]
+        state.quoteIndex = -1
+        showNextQuote()
+    } catch (error) {
+        console.warn('Could not load quotes from the CDN; using the built-in quotes.', error)
+        state.quotes = fallbackQuotes
+        state.quoteIndex = 0
+        state.currentQuote = fallbackQuotes[0]
+        updateQuoteCard()
+    } finally {
+        state.quoteLoading = false
+    }
+}
+
 function discoverPage() {
     const categories = ['All', 'Design', 'Coding', 'Music', 'Languages', 'Academics']
     const filtered = state.people.filter((person) => {
@@ -382,7 +443,7 @@ function discoverPage() {
         }).join('')}</div><span class="result-count">${filtered.length} ${filtered.length === 1 ? 'student' : 'students'}</span></div>
     <div class="student-grid">${filtered.length ? filtered.map(personCard).join('') : `<div class="empty-state"><div class="empty-icon">${icon('search_off')}</div><h3>No peers found yet</h3><p>Try another skill or category. The right learning partner is out there.</p><button class="btn btn-tonal" data-action="clear-filters">Clear filters</button></div>`}</div>
     </section><aside class="discover-aside"><div class="aside-card your-skills-card"><div class="aside-heading"><div><span class="label-text">Your learning profile</span><h3>Your skill mix</h3></div><button class="icon-btn" data-action="navigate" data-page="profile" aria-label="Edit your profile">${icon('edit')}</button></div><div class="skill-mini-section"><span class="label-text">You can teach</span><div class="chips">${chipList(state.profile?.offers, 'filled')}</div></div><div class="skill-mini-section"><span class="label-text">You want to learn</span><div class="chips">${chipList(state.profile?.wants, 'outline')}</div></div><button class="btn btn-text" data-action="navigate" data-page="profile">Edit your skills</button></div>
-      <div class="aside-card stat-card"><div class="stat-icon">${icon('auto_awesome')}</div><div><strong>${best} good ${best === 1 ? 'match' : 'matches'}</strong><p>Based on what you want to learn and share.</p></div></div><div class="quote-card">${icon('format_quote', 'filled-icon')}<p>Knowledge grows when it gets passed around.</p><span class="label-text">The SkillXChange way</span></div></aside></div>`
+       <div class="aside-card stat-card"><div class="stat-icon">${icon('auto_awesome')}</div><div><strong>${best} good ${best === 1 ? 'match' : 'matches'}</strong><p>Based on what you want to learn and share.</p></div></div><div class="quote-card">${icon('format_quote', 'filled-icon')}<button class="icon-btn quote-next" type="button" data-action="next-quote" aria-label="Show another quote" title="Show another quote">${icon('autorenew')}</button><div class="quote-copy" aria-live="polite" aria-atomic="true"><p class="quote-text">${esc(state.currentQuote.quote)}</p><span class="label-text quote-author">${esc(state.currentQuote.author || 'Unknown author')}</span></div></div></aside></div>`
 }
 
 function requestRow(request) {
@@ -598,6 +659,7 @@ function render() {
                 if (area)
                     area.scrollTop = area.scrollHeight
         }
+        if (state.mode === 'app' && state.page === 'discover') loadQuoteCollection()
 }
 
 function parseSkills(value) {
@@ -1158,6 +1220,7 @@ document.addEventListener('click', async(event) => {
             state.category = button.dataset.category;
             render()
         }
+        if (action === 'next-quote') showNextQuote()
         if (action === 'clear-search') {
             state.search = '';
             render();

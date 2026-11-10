@@ -423,17 +423,28 @@ button:disabled::before {
 
 /* Avatars */
 .avatar {
+    position: relative;
     display: inline-grid;
     place-items: center;
     flex: none;
     width: 40px;
     height: 40px;
+    overflow: hidden;
     border-radius: 50%;
     font:var(--ts-title-sm);
     font-size: 1rem;
     background:var(--md-sys-color-primary-container);
     color:var(--md-sys-color-on-primary-container);
     user-select: none;
+}
+.avatar-photo {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: inherit;
+    object-fit: cover;
 }
 .avatar.mint {
     background:var(--md-sys-color-primary-container);
@@ -905,7 +916,7 @@ App shell:navigation bar / rail / drawer + top app bar
     font:var(--ts-title-lg);
     font-weight: 500;
 }
-.nav-brand.brand-name {
+.nav-brand .brand-name {
     display: none;
 }
 .nav-list {
@@ -1020,7 +1031,7 @@ App shell:navigation bar / rail / drawer + top app bar
     overflow: hidden;
     text-overflow:ellipsis;
 }
-.top-app-bar.brand-mark {
+.top-app-bar .brand-mark {
     display: none;
     width: 32px;
     height: 32px;
@@ -2335,7 +2346,7 @@ Adaptive layout (Material window size classes)
     .nav-brand {
         padding: 0 16px;
     }
-    .nav-brand.brand-name {
+    .nav-brand .brand-name {
         display: inline;
     }
     .nav-list {
@@ -2435,7 +2446,7 @@ Adaptive layout (Material window size classes)
     .top-app-bar {
         padding: 0 8px 0 16px;
     }
-    .top-app-bar.brand-mark {
+    .top-app-bar .brand-mark {
         display: block;
     }
     .main-content {
@@ -2487,14 +2498,13 @@ Adaptive layout (Material window size classes)
         min-height: 100dvh;
         overflow: hidden;
     }
-    .chat-app-shell .top-app-bar,
-    .chat-app-shell .nav-bar {
+    .chat-app-shell .top-app-bar {
         display: none;
     }
     .chat-app-shell .app-body {
         height: 100dvh;
         min-height: 0;
-        padding-bottom: 0;
+        padding-bottom: var(--navbar-h);
         overflow: hidden;
     }
     .chat-app-shell .main-content.chat-main-content {

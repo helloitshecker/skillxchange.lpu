@@ -230,7 +230,10 @@ function setTheme(theme) {
 
 function avatar(person, size = '') {
     const tint = person?.color || 'mint'
-        return `<div class="avatar ${size} ${tint}">${esc(initials(person?.name || 'S'))}</div>`
+        const name = person?.name || 'S'
+        const photo = typeof person?.avatarUrl === 'string' && /^https?:\/\//i.test(person.avatarUrl.trim()) ? person.avatarUrl.trim() : ''
+        const image = photo ? `<img class="avatar-photo" src="${esc(photo)}" alt="" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove()" />` : ''
+        return `<div class="avatar ${size} ${tint} ${photo ? 'has-photo' : ''}">${esc(initials(name))}${image}</div>`
 }
 
 function matchingSkills(person) {
@@ -883,6 +886,7 @@ function profileFromRow(row) {
         offers: row.offers || [],
         wants: row.wants || [],
         availability: row.availability || [],
+        avatarUrl: row.avatar_url || '',
         color: 'mint',
     }
 }
@@ -922,6 +926,7 @@ async function loadCloudData() {
                         cloudProfile = created.data
             }
             state.profile = profileFromRow(cloudProfile)
+            state.profile.avatarUrl = cloudUser.user_metadata?.avatar_url || cloudUser.user_metadata?.picture || state.profile.avatarUrl
             state.people = (peopleResult.data || []).map(profileFromRow)
             const peopleMap = new Map(state.people.map((person) => [person.id, person]))
             state.requests = (requestResult.data || []).map((row) => {

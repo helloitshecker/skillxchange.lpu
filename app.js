@@ -171,6 +171,11 @@ const state = {
     currentQuote: fallbackQuotes[0],
     quoteLoading: false,
     quoteLoadAttempted: false,
+    gifResults: [],
+    gifSearch: '',
+    gifLoading: false,
+    gifError: '',
+    gifRequestId: 0,
     search: '',
     category: 'All',
     modal: '',
@@ -486,13 +491,39 @@ function chatSummary(conversation) {
     }
     const messages = state.messages[conversation.id] || []
         const last = messages[messages.length - 1]
-        return `<button class="chat-list-item ${state.activeConversation === conversation.id ? 'active' : ''}" data-action="select-chat" data-conversation="${esc(conversation.id)}">${avatar(person, 'avatar-medium')}<span class="chat-list-copy"><strong>${esc(person.name)}</strong><small>${esc(last?.body || conversation.last_message || conversation.offer || 'Say hello to start!')}</small></span><span class="chat-time">${last ? 'Now' : ''}</span></button>`
+        return `<button class="chat-list-item ${state.activeConversation === conversation.id ? 'active' : ''}" data-action="select-chat" data-conversation="${esc(conversation.id)}">${avatar(person, 'avatar-medium')}<span class="chat-list-copy"><strong>${esc(person.name)}</strong><small>${esc(messagePreview(last?.body || conversation.last_message || conversation.offer || 'Say hello to start!'))}</small></span><span class="chat-time">${last ? 'Now' : ''}</span></button>`
+}
+
+const GIF_MESSAGE_PREFIX = 'GIF:'
+
+function giphyMediaUrl(value) {
+    try {
+        const url = new URL(value)
+        return url.protocol === 'https:' && (url.hostname === 'giphy.com' || url.hostname.endsWith('.giphy.com'))
+            ? url.href
+            : ''
+    } catch {
+        return ''
+    }
+}
+
+function gifUrlFromMessage(body = '') {
+    if (!body.startsWith(GIF_MESSAGE_PREFIX)) return ''
+    return giphyMediaUrl(body.slice(GIF_MESSAGE_PREFIX.length))
+}
+
+function messagePreview(body = '') {
+    return gifUrlFromMessage(body) ? 'GIF' : body
 }
 
 function messageRowMarkup(message, person) {
     const myId = state.isDemo ? state.profile?.id : cloudUser?.id
         const own = message.sender_id === myId || (state.isDemo && message.sender_id === 'demo-student')
-        return `<div class="message-row ${own ? 'own' : ''}" data-message-id="${esc(message.id)}">${!own ? avatar(person, 'avatar-tiny') : ''}<div class="message-bubble"><p>${esc(message.body)}</p><time>${formatTime(message.created_at)}</time></div></div>`
+        const gifUrl = gifUrlFromMessage(message.body)
+        const content = gifUrl
+            ? `<img class="message-gif" src="${esc(gifUrl)}" alt="GIF shared from GIPHY" loading="lazy" decoding="async" />`
+            : `<p>${esc(message.body)}</p>`
+        return `<div class="message-row ${own ? 'own' : ''}" data-message-id="${esc(message.id)}">${!own ? avatar(person, 'avatar-tiny') : ''}<div class="message-bubble ${gifUrl ? 'gif-bubble' : ''}">${content}<time>${formatTime(message.created_at)}</time></div></div>`
 }
 
 function messageThread(conversation) {
@@ -504,7 +535,7 @@ function messageThread(conversation) {
         return `<div class="thread-header"><button class="icon-btn thread-back" data-action="chat-list" aria-label="Back to chats">${icon('arrow_back')}</button>${avatar(person, 'avatar-medium')}<div><strong>${esc(person.name)}</strong><span>${icon('circle')} Active learning partner</span></div><span class="chip tonal static thread-swap">${icon('sync_alt')} ${esc(conversation.offer || 'Skill exchange')}</span><button class="icon-btn" data-action="person-details" data-person="${esc(person.id)}" aria-label="Student details">${icon('more_vert')}</button></div>
     <div class="match-banner"><div class="match-banner-icon">${icon('celebration')}</div><div><strong>It's a match!</strong><p>You can learn from each other. Pick a time and make something happen.</p></div><button class="btn btn-text" data-action="suggest-time">${icon('event')}Suggest a time</button></div>
     <div class="message-area" id="message-area"><div class="day-divider">Your conversation</div>${messages.length ? messages.map((message) => messageRowMarkup(message, person)).join('') : `<div class="thread-empty"><div>${icon('waving_hand')}</div><strong>Say hello to ${esc(person.name.split(' ')[0])}</strong><span>Every great skill swap starts somewhere.</span></div>`}</div>
-    <form class="composer" id="message-form" data-conversation="${esc(conversation.id)}"><label class="composer-input">${icon('sentiment_satisfied')}<input name="message" maxlength="1200" autocomplete="off" placeholder="Message ${esc(person.name.split(' ')[0])}…" required aria-label="Message" /></label><button class="icon-btn filled send-button" type="submit" aria-label="Send message">${icon('send', 'filled-icon')}</button></form>`
+    <form class="composer" id="message-form" data-conversation="${esc(conversation.id)}"><button class="icon-btn gif-button" type="button" data-action="open-gif-picker" aria-label="Choose a GIF" title="Choose a GIF">${icon('gif')}</button><label class="composer-input">${icon('sentiment_satisfied')}<input name="message" maxlength="1200" autocomplete="off" placeholder="Message ${esc(person.name.split(' ')[0])}…" required aria-label="Message" /></label><button class="icon-btn filled send-button" type="submit" aria-label="Send message">${icon('send', 'filled-icon')}</button></form>`
 }
 
 function chatsPage() {
@@ -581,8 +612,8 @@ function appView() {
     <nav class="nav-bar" aria-label="Primary">${items}</nav>${state.modal ? modalView() : ''}</div>`
 }
 
-function dialogShell(inner, labelledBy = '') {
-    return `<div class="modal-backdrop" data-action="close-modal"><section class="modal-card" role="dialog" aria-modal="true" ${labelledBy ? `aria-labelledby="${labelledBy}"` : ''}>${inner}</section></div>`
+function dialogShell(inner, labelledBy = '', className = '') {
+    return `<div class="modal-backdrop" data-action="close-modal"><section class="modal-card ${className}" role="dialog" aria-modal="true" ${labelledBy ? `aria-labelledby="${labelledBy}"` : ''}>${inner}</section></div>`
 }
 
 function modalView() {
@@ -590,6 +621,17 @@ function modalView() {
     const match = matchingSkills(person)
         const first = esc(person.name?.split(' ')[0] || 'this student')
         const cancel = '<button class="btn btn-text modal-close" type="button" data-action="close-modal">Cancel</button>'
+        if (state.modal === 'gif-picker') {
+            const results = state.gifResults.map((gif) => `<button class="gif-result" type="button" data-action="send-gif" data-gif-url="${esc(gif.url)}" aria-label="Send GIF: ${esc(gif.title || 'GIF')}"><img src="${esc(gif.preview)}" alt="" loading="lazy" /><span>${esc(gif.title || 'GIF')}</span></button>`).join('')
+            const feedback = state.gifLoading
+                ? `<div class="gif-picker-message"><span class="spinner"></span><span>Loading GIFs…</span></div>`
+                : state.gifError
+                    ? `<p class="gif-picker-message">${esc(state.gifError)}</p>`
+                    : !results
+                        ? `<p class="gif-picker-message">No GIFs found. Try another search.</p>`
+                        : ''
+            return dialogShell(`<div class="gif-picker-header"><div><h2 id="gif-picker-title">Choose a GIF</h2><p>Search GIPHY to add a little expression.</p></div><button class="icon-btn modal-close" type="button" data-action="close-modal" aria-label="Close GIF picker">${icon('close')}</button></div><form id="gif-search-form" class="gif-search-form"><input type="search" name="query" maxlength="50" value="${esc(state.gifSearch)}" placeholder="Search GIFs" aria-label="Search GIPHY GIFs" /><button class="btn btn-tonal" type="submit">${icon('search')}Search</button></form><div class="gif-results" id="gif-results" aria-live="polite">${results || feedback}</div><div class="gif-powered-by">Powered by <strong>GIPHY</strong></div>`, 'gif-picker-title', 'gif-picker-modal')
+        }
         if (state.modal === 'ask') {
             const myOffers = state.profile?.offers || []
                 const theirOffers = person.offers || []
@@ -638,6 +680,60 @@ function modalView() {
                     })}<div class="dialog-actions">${cancel}<button class="btn btn-filled" type="submit">${icon('send')}Send suggestion</button></div></form><div class="modal-footnote">${icon('chat_bubble')} You can work out the details together in chat.</div>`, 'schedule-title')
         }
         return ''
+}
+
+function openGifPicker() {
+    state.modal = 'gif-picker'
+    state.gifSearch = ''
+    state.gifResults = []
+    state.gifError = ''
+    searchGifs('')
+}
+
+async function searchGifs(query = '') {
+    const apiKey = String(config.giphyApiKey || '').trim()
+    const requestId = ++state.gifRequestId
+    state.gifSearch = query.slice(0, 50)
+    state.gifResults = []
+    state.gifError = ''
+
+    if (!apiKey) {
+        state.gifLoading = false
+        state.gifError = 'Add giphyApiKey to window.SKILLXCHANGE_CONFIG in config.js to search GIPHY.'
+        if (state.modal === 'gif-picker') render()
+        return
+    }
+
+    state.gifLoading = true
+    if (state.modal === 'gif-picker') render()
+    try {
+        const endpoint = state.gifSearch ? 'search' : 'trending'
+        const params = new URLSearchParams({
+            api_key: apiKey,
+            limit: '24',
+            rating: 'g',
+            bundle: 'messaging_non_clips',
+        })
+        if (state.gifSearch) params.set('q', state.gifSearch)
+        const response = await fetch(`https://api.giphy.com/v1/gifs/${endpoint}?${params}`)
+        const payload = await response.json()
+        if (!response.ok || payload.meta?.status >= 400) {
+            throw new Error(payload.meta?.msg || 'GIPHY could not load GIFs.')
+        }
+        if (requestId !== state.gifRequestId) return
+        state.gifResults = (payload.data || []).map((gif) => {
+            const url = giphyMediaUrl(gif.images?.fixed_width?.url || gif.images?.downsized_medium?.url || gif.images?.original?.url)
+            const preview = giphyMediaUrl(gif.images?.fixed_width_small?.url || gif.images?.fixed_width?.url) || url
+            return url ? { id: gif.id, url, preview, title: gif.title || gif.alt_text || 'GIF' } : null
+        }).filter(Boolean)
+    } catch (error) {
+        if (requestId === state.gifRequestId) state.gifError = error.message || 'GIPHY could not load GIFs.'
+    } finally {
+        if (requestId === state.gifRequestId) {
+            state.gifLoading = false
+            if (state.modal === 'gif-picker') render()
+        }
+    }
 }
 
 function formatTime(value) {
@@ -938,10 +1034,10 @@ async function updateRequest(requestId, status) {
             }
 }
 
-async function sendMessage(form) {
+async function sendMessage(form, bodyOverride = '') {
     const input = form.elements.message
         const sendButton = form.querySelector('.send-button')
-        const body = input.value.trim()
+        const body = bodyOverride || input.value.trim()
         const conversationId = form.dataset.conversation
         if (!body)
             return
@@ -1020,7 +1116,7 @@ function appendMessageToChat(message, conversationId, forceScroll = false) {
                         const preview = chatItem.querySelector('.chat-list-copy small')
                             const time = chatItem.querySelector('.chat-time')
                             if (preview)
-                                preview.textContent = message.body
+                                preview.textContent = messagePreview(message.body)
                                     if (time)
                                         time.textContent = 'Now'
                                             if (chatItem.parentElement && chatItem !== chatItem.parentElement.firstElementChild)
@@ -1161,6 +1257,10 @@ document.addEventListener('submit', (event) => {
             event.preventDefault();
             sendMessage(form)
         }
+        if (form.id === 'gif-search-form') {
+            event.preventDefault();
+            searchGifs(form.elements.query.value.trim())
+        }
         if (form.id === 'schedule-form') {
             event.preventDefault();
             sendScheduleProposal(form)
@@ -1221,6 +1321,18 @@ document.addEventListener('click', async(event) => {
             render()
         }
         if (action === 'next-quote') showNextQuote()
+        if (action === 'open-gif-picker') openGifPicker()
+        if (action === 'send-gif') {
+            const url = giphyMediaUrl(button.dataset.gifUrl)
+            if (!url) {
+                showToast('That GIF link is not valid.', 'error')
+                return
+            }
+            state.modal = ''
+            render()
+            const form = document.getElementById('message-form')
+            if (form) await sendMessage(form, `${GIF_MESSAGE_PREFIX}${url}`)
+        }
         if (action === 'clear-search') {
             state.search = '';
             render();

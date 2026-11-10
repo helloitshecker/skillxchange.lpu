@@ -77,8 +77,10 @@
     --md-motion-medium2: 300ms;
     --md-motion-medium4: 400ms;
 
-    /* Typography (Roboto, M3 type scale) */
-    --md-ref-typeface: 'Roboto',
+    /* Typography (Google Sans Flex, M3 type scale) */
+    --md-ref-typeface: 'Google Sans Flex',
+    'Google Sans',
+    'Roboto',
     'Segoe UI',
     system-ui,-apple-system,
     sans-serif;

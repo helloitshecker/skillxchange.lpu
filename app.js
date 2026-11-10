@@ -246,12 +246,15 @@ function field({
     attrs = ''
 }) {
     let control
-    if (options !== null)
-        control = `<select name="${name}" ${attrs}>${options}</select>` else if (rows)
-                control = `<textarea name="${name}" rows="${rows}" placeholder="${esc(placeholder || ' ')}" ${attrs}>${esc(value)}</textarea>` else
-                        control = `<input name="${name}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder || ' ')}" ${attrs} />`
-                            const arrow = options !== null ? icon('arrow_drop_down', 'tf-select-arrow') : ''
-                            return `<label class="tf ${full ? 'full' : ''}"><span class="tf-box">${leading}<span class="tf-control">${control}<span class="tf-label">${esc(label)}</span></span>${arrow}${trailing}</span>${hint ? `<small class="tf-support">${esc(hint)}</small>` : ''}</label>`
+    if (options !== null) {
+        control = `<select name="${name}" ${attrs}>${options}</select>`
+    } else if (rows) {
+        control = `<textarea name="${name}" rows="${rows}" placeholder="${esc(placeholder || ' ')}" ${attrs}>${esc(value)}</textarea>`
+    } else {
+        control = `<input name="${name}" type="${type}" value="${esc(value)}" placeholder="${esc(placeholder || ' ')}" ${attrs} />`
+    }
+    const arrow = options !== null ? icon('arrow_drop_down', 'tf-select-arrow') : ''
+    return `<label class="tf ${full ? 'full' : ''}"><span class="tf-box">${leading}<span class="tf-control">${control}<span class="tf-label">${esc(label)}</span></span>${arrow}${trailing}</span>${hint ? `<small class="tf-support">${esc(hint)}</small>` : ''}</label>`
 }
 
 const brandMarkup = '<img class="brand-mark" src="logo.svg" alt="" aria-hidden="true" /><span class="brand-name">Skill<span class="brand-light">X</span>Change</span>'
@@ -388,17 +391,21 @@ function requestRow(request) {
         id: request.personId
     }
     const received = request.direction === 'received'
-        const status = request.status || 'pending'
-        let action = ''
-        if (received && status === 'pending')
-            action = `<div class="request-actions"><button class="btn btn-text" data-action="decline-request" data-request="${esc(request.id)}">Decline</button><button class="btn btn-filled" data-action="accept-request" data-request="${esc(request.id)}">${icon('check')}Accept</button></div>` else if (!received && status === 'pending')
-                    action = `<span class="chip tonal static">${icon('hourglass_top')} Waiting for reply</span>` else if (status === 'accepted')
-                            action = `<button class="btn btn-tonal" data-action="open-person-chat" data-person="${esc(person.id)}">${icon('chat_bubble')}Open chat</button>` else
-                                    action = `<span class="chip error static">${icon('block')} Declined</span>`
-                                        const description = received
-                                         ? `Wants to learn <strong>${esc(request.wanted_skill)}</strong> · Offers <strong>${esc(request.offered_skill)}</strong>`
-                                         : `You offered <strong>${esc(request.offered_skill)}</strong> for <strong>${esc(request.wanted_skill)}</strong>`
-                                        return `<article class="request-row">${avatar(person, 'avatar-medium')}<div class="request-person"><h3>${esc(person.name)}</h3><p>${description}</p></div>${action}</article>`
+    const status = request.status || 'pending'
+    let action = ''
+    if (received && status === 'pending') {
+        action = `<div class="request-actions"><button class="btn btn-text" data-action="decline-request" data-request="${esc(request.id)}">Decline</button><button class="btn btn-filled" data-action="accept-request" data-request="${esc(request.id)}">${icon('check')}Accept</button></div>`
+    } else if (!received && status === 'pending') {
+        action = `<span class="chip tonal static">${icon('hourglass_top')} Waiting for reply</span>`
+    } else if (status === 'accepted') {
+        action = `<button class="btn btn-tonal" data-action="open-person-chat" data-person="${esc(person.id)}">${icon('chat_bubble')}Open chat</button>`
+    } else {
+        action = `<span class="chip error static">${icon('block')} Declined</span>`
+    }
+    const description = received
+        ? `Wants to learn <strong>${esc(request.wanted_skill)}</strong> · Offers <strong>${esc(request.offered_skill)}</strong>`
+        : `You offered <strong>${esc(request.offered_skill)}</strong> for <strong>${esc(request.wanted_skill)}</strong>`
+    return `<article class="request-row">${avatar(person, 'avatar-medium')}<div class="request-person"><h3>${esc(person.name)}</h3><p>${description}</p></div>${action}</article>`
 }
 
 function requestsPage() {
@@ -1252,14 +1259,20 @@ document.addEventListener('click', async(event) => {
 
 async function start() {
     setTheme(state.theme)
+    render()
     if (!supabase) {
-        render();
         return
     }
-    const { data: {
-        session
+
+    let session = null
+    try {
+        const { data } = await supabase.auth.getSession()
+        session = data?.session || null
+    } catch (error) {
+        console.warn('Could not restore the Supabase session.', error)
+        showToast('Could not restore your session. You can still explore the demo.', 'error')
     }
-     } = await supabase.auth.getSession()
+
         if (session?.user) {
             cloudUser = session.user
                 try {

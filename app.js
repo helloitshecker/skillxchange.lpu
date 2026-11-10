@@ -353,7 +353,8 @@ const navItems = [
 function navItem([page, label, glyph], pending) {
     const count = page === 'requests' && pending ? pending : 0
         const active = state.page === page
-        return `<button class="nav-item ${active ? 'active' : ''}" data-action="navigate" data-page="${page}" ${active ? 'aria-current="page"' : ''}><span class="nav-indicator">${icon(glyph)}${count ? `<span class="badge">${count}</span>` : ''}</span><span class="nav-label">${label}</span>${count ? `<span class="nav-count">${count}</span>` : ''}</button>`
+        const activeIcon = icon(glyph, active ? 'filled-icon' : '')
+        return `<button class="nav-item ${active ? 'active' : ''}" data-action="navigate" data-page="${page}" ${active ? 'aria-current="page"' : ''}><span class="nav-indicator">${activeIcon}${count ? `<span class="badge">${count}</span>` : ''}</span><span class="nav-label">${label}</span>${count ? `<span class="nav-count">${count}</span>` : ''}</button>`
 }
 
 function personCard(person) {

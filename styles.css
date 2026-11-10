@@ -1,0 +1,2462 @@
+/* Used Material 3 Design :) */
+/* 696f621fa44988b67dfb23c8b6bc74ad5be73638b2d5d214b1a18c76468bea6b */
+
+: root {
+    color - scheme: light;
+    --md - sys - color - primary: #046b5c;
+    --md - sys - color - on - primary: #ffffff;
+    --md - sys - color - primary - container: #a0f2df;
+    --md - sys - color - on - primary - container: #00201b;
+    --md - sys - color - secondary: #4a635d;
+    --md - sys - color - on - secondary: #ffffff;
+    --md - sys - color - secondary - container: #cde8e0;
+    --md - sys - color - on - secondary - container: #06201b;
+    --md - sys - color - tertiary: #436278;
+    --md - sys - color - on - tertiary: #ffffff;
+    --md - sys - color - tertiary - container: #c9e6ff;
+    --md - sys - color - on - tertiary - container: #001e2f;
+    --md - sys - color - error: #ba1a1a;
+    --md - sys - color - on - error: #ffffff;
+    --md - sys - color - error - container: #ffdad6;
+    --md - sys - color - on - error - container: #410002;
+    --md - sys - color - background: #f8faf7;
+    --md - sys - color - on - background: #191c1b;
+    --md - sys - color - surface: #f8faf7;
+    --md - sys - color - on - surface: #191c1b;
+    --md - sys - color - surface - variant: #dae5e0;
+    --md - sys - color - on - surface - variant: #3f4946;
+    --md - sys - color - outline: #6f7976;
+    --md - sys - color - outline - variant: #bec9c5;
+    --md - sys - color - inverse - surface: #2d3130;
+    --md - sys - color - inverse - on - surface: #eff1ef;
+    --md - sys - color - inverse - primary: #84d6c3;
+    --md - sys - color - surface - dim: #d8dbd8;
+    --md - sys - color - surface - bright: #f8faf7;
+    --md - sys - color - surface - container - lowest: #ffffff;
+    --md - sys - color - surface - container - low: #f2f4f2;
+    --md - sys - color - surface - container: #eceeec;
+    --md - sys - color - surface - container - high: #e6e9e6;
+    --md - sys - color - surface - container - highest: #e0e3e1;
+    --md - sys - color - surface - tint: #046b5c;
+    --md - sys - color - blue - container: #cee5ff;
+    --md - sys - color - on - blue - container: #001d33;
+    --md - sys - color - violet - container: #e3dfff;
+    --md - sys - color - on - violet - container: #17134a;
+    --md - sys - color - peach - container: #ffdcc0;
+    --md - sys - color - on - peach - container: #2d1600;
+    --md - sys - color - amber - container: #f6e388;
+    --md - sys - color - on - amber - container: #211b00;
+
+    /* Shape */
+    --md - sys - shape - corner - xs: 4px;
+    --md - sys - shape - corner - sm: 8px;
+    --md - sys - shape - corner - md: 12px;
+    --md - sys - shape - corner - lg: 16px;
+    --md - sys - shape - corner - xl: 28px;
+    --md - sys - shape - corner - full: 9999px;
+
+    /* Elevation */
+    --md - sys - elevation - 0: none;
+    --md - sys - elevation - 1: 0 1px 2px rgb(0 0 0 / .30),
+    0 1px 3px 1px rgb(0 0 0 / .15);
+    --md - sys - elevation - 2: 0 1px 2px rgb(0 0 0 / .30),
+    0 2px 6px 2px rgb(0 0 0 / .15);
+    --md - sys - elevation - 3: 0 1px 3px rgb(0 0 0 / .30),
+    0 4px 8px 3px rgb(0 0 0 / .15);
+    --md - sys - elevation - 4: 0 2px 3px rgb(0 0 0 / .30),
+    0 6px 10px 4px rgb(0 0 0 / .15);
+    --md - sys - elevation - 5: 0 4px 4px rgb(0 0 0 / .30),
+    0 8px 12px 6px rgb(0 0 0 / .15);
+
+    /* Motion */
+    --md - motion - standard: cubic - bezier(.2, 0, 0, 1);
+    --md - motion - emphasized - decel: cubic - bezier(.05, .7, .1, 1);
+    --md - motion - emphasized - accel: cubic - bezier(.3, 0, .8, .15);
+    --md - motion - short2: 100ms;
+    --md - motion - short4: 200ms;
+    --md - motion - medium2: 300ms;
+    --md - motion - medium4: 400ms;
+
+    /* Typography (Roboto, M3 type scale) */
+    --md - ref - typeface: 'Roboto',
+    'Segoe UI',
+    system - ui,
+    -apple - system,
+    sans - serif;
+    --ts - display - lg: 400 3.5625rem / 4rem var(--md - ref - typeface);
+    --ts - display - md: 400 2.8125rem / 3.25rem var(--md - ref - typeface);
+    --ts - display - sm: 400 2.25rem / 2.75rem var(--md - ref - typeface);
+    --ts - headline - lg: 400 2rem / 2.5rem var(--md - ref - typeface);
+    --ts - headline - md: 400 1.75rem / 2.25rem var(--md - ref - typeface);
+    --ts - headline - sm: 400 1.5rem / 2rem var(--md - ref - typeface);
+    --ts - title - lg: 400 1.375rem / 1.75rem var(--md - ref - typeface);
+    --ts - title - md: 500 1rem / 1.5rem var(--md - ref - typeface);
+    --ts - title - sm: 500.875rem / 1.25rem var(--md - ref - typeface);
+    --ts - label - lg: 500.875rem / 1.25rem var(--md - ref - typeface);
+    --ts - label - md: 500.75rem / 1rem var(--md - ref - typeface);
+    --ts - label - sm: 500.6875rem / 1rem var(--md - ref - typeface);
+    --ts - body - lg: 400 1rem / 1.5rem var(--md - ref - typeface);
+    --ts - body - md: 400.875rem / 1.25rem var(--md - ref - typeface);
+    --ts - body - sm: 400.75rem / 1rem var(--md - ref - typeface);
+
+    --appbar - h: 64px;
+    --navbar - h: 80px;
+}
+
+: root[data - theme = 'dark']{
+    color - scheme: dark;
+    --md - sys - color - primary: #84d6c3;
+    --md - sys - color - on - primary: #00382f;
+    --md - sys - color - primary - container: #005045;
+    --md - sys - color - on - primary - container: #a0f2df;
+    --md - sys - color - secondary: #b1ccc4;
+    --md - sys - color - on - secondary: #1d352f;
+    --md - sys - color - secondary - container: #334b45;
+    --md - sys - color - on - secondary - container: #cde8e0;
+    --md - sys - color - tertiary: #abcae4;
+    --md - sys - color - on - tertiary: #123348;
+    --md - sys - color - tertiary - container: #2b4a5f;
+    --md - sys - color - on - tertiary - container: #c9e6ff;
+    --md - sys - color - error: #ffb4ab;
+    --md - sys - color - on - error: #690005;
+    --md - sys - color - error - container: #93000a;
+    --md - sys - color - on - error - container: #ffdad6;
+    --md - sys - color - background: #101413;
+    --md - sys - color - on - background: #e0e3e1;
+    --md - sys - color - surface: #101413;
+    --md - sys - color - on - surface: #e0e3e1;
+    --md - sys - color - surface - variant: #3f4946;
+    --md - sys - color - on - surface - variant: #bec9c5;
+    --md - sys - color - outline: #89938f;
+    --md - sys - color - outline - variant: #3f4946;
+    --md - sys - color - inverse - surface: #e0e3e1;
+    --md - sys - color - inverse - on - surface: #2d3130;
+    --md - sys - color - inverse - primary: #046b5c;
+    --md - sys - color - surface - dim: #101413;
+    --md - sys - color - surface - bright: #363a38;
+    --md - sys - color - surface - container - lowest: #0b0f0e;
+    --md - sys - color - surface - container - low: #191c1b;
+    --md - sys - color - surface - container: #1d201f;
+    --md - sys - color - surface - container - high: #272b29;
+    --md - sys - color - surface - container - highest: #323634;
+    --md - sys - color - surface - tint: #84d6c3;
+    --md - sys - color - blue - container: #0e4a73;
+    --md - sys - color - on - blue - container: #cee5ff;
+    --md - sys - color - violet - container: #434078;
+    --md - sys - color - on - violet - container: #e3dfff;
+    --md - sys - color - peach - container: #6b3b03;
+    --md - sys - color - on - peach - container: #ffdcc0;
+    --md - sys - color - amber - container: #524700;
+    --md - sys - color - on - amber - container: #f6e388;
+}
+
+/* Base */
+ * {
+    box - sizing: border - box;
+}
+html {
+    min - width: 320px;
+    background: var(--md - sys - color - surface);
+    -webkit - text - size - adjust: 100 % ;
+}
+body {
+    margin: 0;
+    color: var(--md - sys - color - on - surface);
+    background: var(--md - sys - color - surface);
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+    -webkit - font - smoothing: antialiased;
+}
+h1, h2, h3, h4, p {
+    margin: 0;
+}
+button, input, textarea, select {
+    font: inherit;
+    letter - spacing: inherit;
+    color: inherit;
+}
+button {
+    border: 0;
+    padding: 0;
+    background: none;
+    cursor: pointer;
+    -webkit - tap - highlight - color: transparent;
+}
+button: disabled {
+    cursor: default ;
+}
+code {
+    font - family: ui - monospace,
+    Consolas,
+    monospace;
+    font - size: .92em;
+    padding: 1px 6px;
+    border - radius: var(--md - sys - shape - corner - xs);
+    background: var(--md - sys - color - surface - container - highest);
+}
+: focus - visible {
+    outline: 3px solid var(--md - sys - color - secondary);
+    outline - offset: 2px;
+}
+.material - symbols - rounded {
+    font - family: 'Material Symbols Rounded';
+    font - weight: 400;
+    font - style: normal;
+    font - size: 24px;
+    line - height: 1;
+    display: inline - block;
+    flex: none;
+    white - space: nowrap;
+    direction: ltr;
+    letter - spacing: normal;
+    text - transform: none;
+    user - select: none;
+    -webkit - font - feature - settings: 'liga';
+    font - feature - settings: 'liga';
+    -webkit - font - smoothing: antialiased;
+    font - variation - settings: 'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+.filled - icon {
+    font - variation - settings: 'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+.sr - only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white - space: nowrap;
+}
+
+/* State layer (hover / focus / pressed) */
+.btn, .icon - btn, .chip, .nav - item, .list - item, .tab, .fab, .search - bar, .card - interactive {
+    position: relative;
+    isolation: isolate;
+}
+.btn::before, .icon - btn::before, .chip::before, .nav - item::before, .list - item::before, .tab::before, .fab::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z - index: -1;
+    border - radius: inherit;
+    background: currentColor;
+    opacity: 0;
+    pointer - events: none;
+    transition: opacity var(--md - motion - short2)linear;
+}
+.btn: hover::before, .icon - btn: hover::before, .chip: hover::before, .nav - item: hover::before, .list - item: hover::before, .tab: hover::before, .fab: hover::before {
+    opacity: .08;
+}
+.btn: focus - visible::before, .icon - btn: focus - visible::before, .chip: focus - visible::before, .nav - item: focus - visible::before, .list - item: focus - visible::before, .tab: focus - visible::before, .fab: focus - visible::before {
+    opacity: .10;
+}
+.btn: active::before, .icon - btn: active::before, .chip: active::before, .nav - item: active::before, .list - item: active::before, .tab: active::before, .fab: active::before {
+    opacity: .10;
+}
+button: disabled::before {
+    opacity: 0!important;
+}
+
+/* Buttons */
+.btn {
+    display: inline - flex;
+    align - items: center;
+    justify - content: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 24px;
+    border - radius: var(--md - sys - shape - corner - full);
+    font: var(--ts - label - lg);
+    letter - spacing: .00625rem;
+    white - space: nowrap;
+    user - select: none;
+    text - decoration: none;
+    transition: box - shadow var(--md - motion - short4)var(--md - motion - standard);
+}
+.btn: has( > .material - symbols - rounded: first - child) {
+    padding - left: 16px;
+}
+.btn.material - symbols - rounded {
+    font - size: 18px;
+}
+.btn - filled {
+    background: var(--md - sys - color - primary);
+    color: var(--md - sys - color - on - primary);
+}
+.btn - filled: hover {
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.btn - tonal {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.btn - tonal: hover {
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.btn - elevated {
+    background: var(--md - sys - color - surface - container - low);
+    color: var(--md - sys - color - primary);
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.btn - outlined {
+    color: var(--md - sys - color - primary);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline);
+}
+.btn - text {
+    color: var(--md - sys - color - primary);
+    padding: 0 12px;
+}
+.btn - text: has( > .material - symbols - rounded: first - child) {
+    padding - left: 12px;
+}
+.btn - block {
+    width: 100 % ;
+}
+.btn: disabled {
+    background: color - mix(in srgb, var(--md - sys - color - on - surface)12 % , transparent);
+    color: color - mix(in srgb, var(--md - sys - color - on - surface)38 % , transparent);
+    box - shadow: none;
+}
+.btn - outlined: disabled {
+    background: none;
+    box - shadow: inset 0 0 0 1px color - mix(in srgb, var(--md - sys - color - on - surface)12 % , transparent);
+}
+.btn - text: disabled {
+    background: none;
+}
+
+.icon - btn {
+    display: inline - grid;
+    place - items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border - radius: 50 % ;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.icon - btn.filled {
+    background: var(--md - sys - color - primary);
+    color: var(--md - sys - color - on - primary);
+}
+.icon - btn.tonal {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.icon - btn: disabled {
+    color: color - mix(in srgb, var(--md - sys - color - on - surface)38 % , transparent);
+}
+.icon - btn.filled: disabled {
+    background: color - mix(in srgb, var(--md - sys - color - on - surface)12 % , transparent);
+}
+
+.fab {
+    display: inline - flex;
+    align - items: center;
+    justify - content: center;
+    gap: 12px;
+    height: 56px;
+    min - width: 56px;
+    padding: 0 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+    font: var(--ts - label - lg);
+    font - size: 1rem;
+    box - shadow: var(--md - sys - elevation - 3);
+    transition: box - shadow var(--md - motion - short4)var(--md - motion - standard);
+}
+.fab: hover {
+    box - shadow: var(--md - sys - elevation - 4);
+}
+
+/* Chips */
+.chips {
+    display: flex;
+    flex - wrap: wrap;
+    gap: 8px;
+}
+.chip {
+    display: inline - flex;
+    align - items: center;
+    gap: 8px;
+    height: 32px;
+    padding: 0 12px;
+    border - radius: var(--md - sys - shape - corner - sm);
+    font: var(--ts - label - lg);
+    letter - spacing: .00625rem;
+    white - space: nowrap;
+    color: var(--md - sys - color - on - surface - variant);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline - variant);
+    user - select: none;
+}
+.chip.material - symbols - rounded {
+    font - size: 18px;
+}
+.chip.tonal {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+    box - shadow: none;
+}
+.chip.selected {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+    box - shadow: none;
+    padding - left: 8px;
+}
+.chip.error {
+    background: var(--md - sys - color - error - container);
+    color: var(--md - sys - color - on - error - container);
+    box - shadow: none;
+}
+.chip.static {
+    pointer - events: none;
+}
+.chip.static::before {
+    display: none;
+}
+
+/* Avatars */
+.avatar {
+    display: inline - grid;
+    place - items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border - radius: 50 % ;
+    font: var(--ts - title - sm);
+    font - size: 1rem;
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+    user - select: none;
+}
+.avatar.mint {
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+}
+.avatar.blue {
+    background: var(--md - sys - color - blue - container);
+    color: var(--md - sys - color - on - blue - container);
+}
+.avatar.lavender {
+    background: var(--md - sys - color - violet - container);
+    color: var(--md - sys - color - on - violet - container);
+}
+.avatar.peach {
+    background: var(--md - sys - color - peach - container);
+    color: var(--md - sys - color - on - peach - container);
+}
+.avatar.yellow {
+    background: var(--md - sys - color - amber - container);
+    color: var(--md - sys - color - on - amber - container);
+}
+.avatar - tiny {
+    width: 28px;
+    height: 28px;
+    font - size: .75rem;
+}
+.avatar - small {
+    width: 32px;
+    height: 32px;
+    font - size: .875rem;
+}
+.avatar - medium {
+    width: 40px;
+    height: 40px;
+}
+.avatar - large {
+    width: 48px;
+    height: 48px;
+    font - size: 1.125rem;
+}
+.avatar - profile {
+    width: 88px;
+    height: 88px;
+    font: var(--ts - headline - sm);
+    border: 4px solid var(--md - sys - color - surface - container - low);
+}
+
+/* Text fields (outlined) */
+.tf {
+    --field - bg: var(--md - sys - color - surface);
+    display: block;
+    min - width: 0;
+}
+.tf - box {
+    position: relative;
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    min - height: 56px;
+    padding: 0 16px;
+    border - radius: var(--md - sys - shape - corner - xs);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline);
+    transition: box - shadow var(--md - motion - short4)var(--md - motion - standard);
+}
+.tf: hover.tf - box {
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - on - surface);
+}
+.tf: focus - within.tf - box {
+    box - shadow: inset 0 0 0 2px var(--md - sys - color - primary);
+}
+.tf - control {
+    position: relative;
+    flex: 1;
+    min - width: 0;
+    display: flex;
+}
+.tf - control input, .tf - control textarea, .tf - control select {
+    width: 100 % ;
+    min - width: 0;
+    padding: 16px 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface);
+    caret - color: var(--md - sys - color - primary);
+}
+.tf - control textarea {
+    resize: vertical;
+    min - height: 96px;
+}
+.tf - control select {
+    appearance: none;
+    -webkit - appearance: none;
+    cursor: pointer;
+    padding - right: 8px;
+}
+.tf - control select option {
+    background: var(--md - sys - color - surface - container - high);
+    color: var(--md - sys - color - on - surface);
+}
+.tf - control input::placeholder, .tf - control textarea::placeholder {
+    color: transparent;
+    transition: color var(--md - motion - short2);
+}
+.tf - control input: focus::placeholder, .tf - control textarea: focus::placeholder {
+    color: var(--md - sys - color - on - surface - variant);
+    opacity: .8;
+}
+.tf - label {
+    position: absolute;
+    left: 0;
+    top: 16px;
+    padding: 0;
+    max - width: 100 % ;
+    overflow: hidden;
+    text - overflow: ellipsis;
+    white - space: nowrap;
+    pointer - events: none;
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface - variant);
+    transition: transform var(--md - motion - short4)var(--md - motion - standard),
+    color var(--md - motion - short4),
+    font - size var(--md - motion - short4),
+    background var(--md - motion - short4);
+    transform - origin: left top;
+}
+.tf - control input: focus~.tf - label, .tf - control input: not(: placeholder - shown)~.tf - label,
+.tf - control textarea: focus~.tf - label, .tf - control textarea: not(: placeholder - shown)~.tf - label,
+.tf - control select~.tf - label, .tf - control input[type = 'date']~.tf - label, .tf - control input[type = 'time']~.tf - label {
+    top: 0;
+    transform: translate(-4px, -50 % );
+    padding: 0 4px;
+    background: var(--field - bg);
+    font - size: .75rem;
+    line - height: 1rem;
+    letter - spacing: .025rem;
+    max - width: calc(100 %  + 8px);
+}
+.tf: focus - within.tf - label {
+    color: var(--md - sys - color - primary);
+}
+.tf - box > .material - symbols - rounded {
+    color: var(--md - sys - color - on - surface - variant);
+}
+.tf - box.icon - btn {
+    margin - right: -8px;
+}
+.tf - support {
+    display: block;
+    padding: 4px 16px 0;
+    font: var(--ts - body - sm);
+    letter - spacing: .025rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.tf - select - arrow {
+    pointer - events: none;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.form - stack {
+    display: grid;
+    gap: 20px;
+}
+.form - stack.tf - support {
+    margin - bottom: -4px;
+}
+
+/* Cards */
+.card {
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - surface - container - low);
+}
+.card.elevated {
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.card.filled {
+    background: var(--md - sys - color - surface - container - highest);
+}
+.card.outlined {
+    background: var(--md - sys - color - surface);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline - variant);
+}
+.card - pad {
+    padding: 16px;
+}
+.label - text {
+    font: var(--ts - label - md);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.supporting {
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.divider {
+    height: 1px;
+    border: 0;
+    margin: 0;
+    background: var(--md - sys - color - outline - variant);
+}
+
+/* Progress */
+.spinner {
+    width: 18px;
+    height: 18px;
+    flex: none;
+    border - radius: 50 % ;
+    border: 3px solid color - mix(in srgb, currentColor 25 % , transparent);
+    border - top - color: currentColor;
+    animation: spin.9s linear infinite;
+}
+ @ keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*
+Sign in 
+*/
+.auth - layout {
+    min - height: 100dvh;
+    display: grid;
+    grid - template - columns: minmax(0, 1fr)minmax(0, 1fr);
+    background: var(--md - sys - color - surface);
+}
+.auth - story {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex - direction: column;
+    padding: clamp(24px, 5vw, 72px);
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+}
+.auth - shape {
+    position: absolute;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - primary);
+    opacity: .1;
+    pointer - events: none;
+}
+.auth - shape.s1 {
+    width: 520px;
+    height: 520px;
+    right: -180px;
+    bottom: -190px;
+}
+.auth - shape.s2 {
+    width: 260px;
+    height: 260px;
+    right: 90px;
+    bottom: 150px;
+    opacity: .08;
+    border - radius: 40 % ;
+    transform: rotate(18deg);
+}
+.brand {
+    display: inline - flex;
+    align - items: center;
+    gap: 12px;
+    font: var(--ts - title - lg);
+    font - weight: 500;
+    letter - spacing: 0;
+    color: inherit;
+    text - decoration: none;
+}
+.brand - mark {
+    display: block;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border - radius: 12px;
+    object - fit: cover;
+}
+.brand - light {
+    color: var(--md - sys - color - primary);
+}
+.auth - story.brand - light {
+    color: inherit;
+    font - weight: 700;
+}
+.story - copy {
+    position: relative;
+    z - index: 1;
+    max - width: 560px;
+    margin: auto 0;
+    padding: 48px 0;
+}
+.story - copy.chip {
+    margin - bottom: 24px;
+    background: color - mix(in srgb, var(--md - sys - color - on - primary - container)8 % , transparent);
+    color: inherit;
+    box - shadow: none;
+}
+.story - copy h1 {
+    font: var(--ts - display - lg);
+    font - size: clamp(2.75rem, 5.2vw, 4.5rem);
+    line - height: 1.05;
+    letter - spacing:  - .01em;
+}
+.story - copy h1 em {
+    font - style: normal;
+    color: var(--md - sys - color - primary);
+}
+.story - copy p {
+    margin - top: 24px;
+    max - width: 460px;
+    font: var(--ts - title - md);
+    font - weight: 400;
+    line - height: 1.6;
+    opacity: .88;
+}
+.story - chips {
+    position: relative;
+    z - index: 1;
+    display: flex;
+    flex - wrap: wrap;
+    gap: 8px;
+    margin - bottom: 32px;
+}
+.story - chips.chip {
+    background: var(--md - sys - color - surface - container - lowest);
+    color: var(--md - sys - color - on - surface);
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.story - foot {
+    position: relative;
+    z - index: 1;
+    display: flex;
+    flex - wrap: wrap;
+    justify - content: space - between;
+    gap: 8px 24px;
+    font: var(--ts - label - lg);
+    opacity: .8;
+}
+.story - foot span {
+    display: inline - flex;
+    align - items: center;
+    gap: 8px;
+}
+.story - foot.material - symbols - rounded {
+    font - size: 20px;
+}
+.auth - panel {
+    position: relative;
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    justify - content: center;
+    padding: 48px 24px;
+}
+.auth - mobile - brand {
+    display: none;
+    margin - bottom: 32px;
+}
+.auth - form - wrap {
+    width: 100 % ;
+    max - width: 400px;
+}
+.auth - form - wrap h2 {
+    font: var(--ts - headline - md);
+    margin - bottom: 8px;
+}
+.auth - subtitle {
+    margin - bottom: 32px;
+    font: var(--ts - body - lg);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.auth - divider {
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    margin: 20px 0;
+    font: var(--ts - label - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.auth - divider::before, .auth - divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--md - sys - color - outline - variant);
+}
+.google - g {
+    display: inline - grid;
+    place - items: center;
+    width: 18px;
+    height: 18px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - surface - container - highest);
+    color: var(--md - sys - color - primary);
+    font: 700 12px / 1 var(--md - ref - typeface);
+}
+.auth - switch {
+    display: flex;
+    flex - wrap: wrap;
+    align - items: center;
+    justify - content: center;
+    margin - top: 16px;
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.demo - card {
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    margin - top: 24px;
+    padding: 12px 16px;
+    border - radius: var(--md - sys - shape - corner - md);
+    background: var(--md - sys - color - tertiary - container);
+    color: var(--md - sys - color - on - tertiary - container);
+    font: var(--ts - body - md);
+}
+.demo - card.btn - text {
+    color: inherit;
+    font - weight: 700;
+    padding: 0 8px;
+    height: 32px;
+}
+.setup - note {
+    margin - top: 16px;
+    text - align: center;
+    font: var(--ts - body - sm);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.auth - theme {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/*
+App shell: navigation bar / rail / drawer + top app bar
+*/
+.app - shell {
+    display: flex;
+    min - height: 100dvh;
+    background: var(--md - sys - color - surface);
+}
+.app - body {
+    flex: 1;
+    min - width: 0;
+    display: flex;
+    flex - direction: column;
+}
+
+.nav - rail {
+    position: sticky;
+    top: 0;
+    z - index: 20;
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    flex: none;
+    width: 80px;
+    height: 100dvh;
+    padding: 44px 0 24px;
+    gap: 40px;
+    background: var(--md - sys - color - surface - container - low);
+}
+.nav - brand {
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    color: var(--md - sys - color - on - surface);
+    font: var(--ts - title - lg);
+    font - weight: 500;
+}
+.nav - brand.brand - name {
+    display: none;
+}
+.nav - list {
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    gap: 12px;
+    width: 100 % ;
+}
+.nav - item {
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    gap: 4px;
+    width: 100 % ;
+    color: var(--md - sys - color - on - surface - variant);
+    font: var(--ts - label - md);
+    letter - spacing: .03125rem;
+}
+.nav - item::before {
+    display: none;
+}
+.nav - indicator {
+    position: relative;
+    display: grid;
+    place - items: center;
+    width: 56px;
+    height: 32px;
+    border - radius: var(--md - sys - shape - corner - full);
+    transition: background var(--md - motion - short4)var(--md - motion - standard);
+}
+.nav - indicator::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border - radius: inherit;
+    background: var(--md - sys - color - on - surface);
+    opacity: 0;
+    transition: opacity var(--md - motion - short2);
+}
+.nav - item: hover.nav - indicator::before {
+    opacity: .08;
+}
+.nav - item: focus - visible.nav - indicator::before, .nav - item: active.nav - indicator::before {
+    opacity: .10;
+}
+.nav - item.active {
+    color: var(--md - sys - color - on - surface);
+}
+.nav - item.active.nav - indicator {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.nav - item.active.material - symbols - rounded {
+    font - variation - settings: 'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+.nav - item.active.nav - label {
+    font - weight: 700;
+}
+.nav - fab - label {
+    display: none;
+}
+.badge {
+    position: absolute;
+    top: 0;
+    left: calc(50 %  + 2px);
+    min - width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    display: grid;
+    place - items: center;
+    border - radius: 8px;
+    background: var(--md - sys - color - error);
+    color: var(--md - sys - color - on - error);
+    font: var(--ts - label - sm);
+    letter - spacing: .03125rem;
+}
+.nav - indicator.badge {
+    top: 2px;
+    left: auto;
+    right: 10px;
+}
+.nav - count {
+    display: none;
+}
+
+.nav - bar {
+    display: none;
+}
+
+.top - app - bar {
+    position: sticky;
+    top: 0;
+    z - index: 15;
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    height: var(--appbar - h);
+    padding: 0 16px 0 24px;
+    background: var(--md - sys - color - surface);
+}
+.top - app - bar h1 {
+    flex: 1;
+    min - width: 0;
+    font: var(--ts - title - lg);
+    color: var(--md - sys - color - on - surface);
+    letter - spacing: 0;
+    white - space: nowrap;
+    overflow: hidden;
+    text - overflow: ellipsis;
+}
+.top - app - bar.brand - mark {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border - radius: 10px;
+}
+.top - actions {
+    display: flex;
+    align - items: center;
+    gap: 4px;
+}
+.profile - shortcut {
+    display: inline - grid;
+    place - items: center;
+    width: 48px;
+    height: 48px;
+    border - radius: 50 % ;
+}
+
+.main - content {
+    flex: 1;
+    min - width: 0;
+    padding: 8px 24px 40px;
+}
+.main - inner {
+    width: 100 % ;
+    max - width: 1240px;
+    margin: 0 auto;
+}
+.chat - main - content {
+    padding - bottom: 24px;
+}
+
+.page - intro h2 {
+    font: var(--ts - headline - sm);
+}
+.page - intro p {
+    margin - top: 4px;
+}
+
+/* Discover */
+.discover - layout {
+    display: grid;
+    grid - template - columns: minmax(0, 1fr)320px;
+    gap: 24px;
+    align - items: start;
+}
+.hero {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 24px;
+    min - height: 192px;
+    padding: 32px;
+    margin - bottom: 24px;
+    border - radius: var(--md - sys - shape - corner - xl);
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+}
+.hero - copy {
+    position: relative;
+    z - index: 1;
+    max - width: 520px;
+}
+.hero - copy.label - text {
+    color: inherit;
+    opacity: .8;
+}
+.hero - copy h2 {
+    margin - top: 8px;
+    font: var(--ts - headline - md);
+}
+.hero - copy h2 em {
+    font - style: normal;
+    color: var(--md - sys - color - primary);
+}
+.hero - copy p {
+    margin - top: 8px;
+    font: var(--ts - body - lg);
+    opacity: .88;
+}
+.hero - art {
+    position: relative;
+    flex: none;
+    width: 160px;
+    height: 160px;
+    display: grid;
+    place - items: center;
+}
+.hero - art::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border - radius: 38 % ;
+    background: var(--md - sys - color - primary);
+    opacity: .12;
+    transform: rotate(12deg);
+}
+.hero - art::after {
+    content: '';
+    position: absolute;
+    inset: 24px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - primary);
+    opacity: .14;
+}
+.hero - art.material - symbols - rounded {
+    position: relative;
+    z - index: 1;
+    font - size: 64px;
+    color: var(--md - sys - color - primary);
+    font - variation - settings: 'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 48;
+}
+
+.search - bar {
+    display: flex;
+    align - items: center;
+    gap: 4px;
+    height: 56px;
+    padding: 0 4px 0 8px;
+    margin - bottom: 16px;
+    border - radius: var(--md - sys - shape - corner - full);
+    background: var(--md - sys - color - surface - container - high);
+    transition: box - shadow var(--md - motion - short4)var(--md - motion - standard);
+}
+.search - bar: hover {
+    box - shadow: var(--md - sys - elevation - 1);
+}
+.search - bar: focus - within {
+    box - shadow: var(--md - sys - elevation - 2);
+}
+.search - bar input {
+    flex: 1;
+    min - width: 0;
+    height: 100 % ;
+    padding: 0 8px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+}
+.search - bar input::placeholder {
+    color: var(--md - sys - color - on - surface - variant);
+}
+.search - bar input::-webkit - search - cancel - button {
+    display: none;
+}
+.filter - row {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 16px;
+    margin - bottom: 16px;
+}
+.category - list {
+    display: flex;
+    gap: 8px;
+    overflow - x: auto;
+    padding: 2px;
+    margin: -2px;
+    scrollbar - width: none;
+}
+.category - list::-webkit - scrollbar {
+    display: none;
+}
+.result - count {
+    flex: none;
+    font: var(--ts - label - lg);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.student - grid {
+    display: grid;
+    grid - template - columns: repeat(auto - fill, minmax(320px, 1fr));
+    gap: 16px;
+}
+
+.person - card {
+    display: flex;
+    flex - direction: column;
+    gap: 16px;
+    padding: 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - surface - container - low);
+    box - shadow: var(--md - sys - elevation - 1);
+    transition: box - shadow var(--md - motion - medium2)var(--md - motion - standard);
+}
+.person - card: hover {
+    box - shadow: var(--md - sys - elevation - 2);
+}
+.person - card - top {
+    display: flex;
+    align - items: center;
+    gap: 12px;
+}
+.person - identity {
+    flex: 1;
+    min - width: 0;
+    display: flex;
+    align - items: center;
+    gap: 12px;
+}
+.person - identity > div {
+    min - width: 0;
+}
+.person - name - line {
+    display: flex;
+    align - items: center;
+    gap: 8px;
+    flex - wrap: wrap;
+}
+.person - name - line h2 {
+    font: var(--ts - title - md);
+    letter - spacing: .009375rem;
+}
+.year - tag {
+    padding: 0 8px;
+    border - radius: var(--md - sys - shape - corner - xs);
+    background: var(--md - sys - color - surface - container - highest);
+    font: var(--ts - label - sm);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.person - identity p {
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    color: var(--md - sys - color - on - surface - variant);
+    white - space: nowrap;
+    overflow: hidden;
+    text - overflow: ellipsis;
+}
+.skill - columns {
+    display: grid;
+    gap: 12px;
+}
+.skill - columns.label - text, .skill - mini - section.label - text {
+    display: block;
+    margin - bottom: 8px;
+}
+.match - note {
+    display: flex;
+    align - items: flex - start;
+    gap: 12px;
+    padding: 12px;
+    border - radius: var(--md - sys - shape - corner - md);
+    background: var(--md - sys - color - tertiary - container);
+    color: var(--md - sys - color - on - tertiary - container);
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+}
+.match - note.material - symbols - rounded {
+    font - size: 20px;
+    margin - top: 1px;
+}
+.match - note strong {
+    font - weight: 700;
+}
+.person - card - bottom {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 12px;
+    margin - top: auto;
+}
+.availability {
+    display: inline - flex;
+    align - items: center;
+    gap: 6px;
+    min - width: 0;
+    font: var(--ts - body - sm);
+    letter - spacing: .025rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.availability.material - symbols - rounded {
+    font - size: 18px;
+}
+
+.discover - aside {
+    display: grid;
+    gap: 16px;
+    position: sticky;
+    top: calc(var(--appbar - h) + 8px);
+}
+.aside - card {
+    padding: 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - surface - container - low);
+}
+.aside - heading {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 8px;
+    margin - bottom: 16px;
+}
+.aside - heading h3 {
+    font: var(--ts - title - md);
+}
+.aside - heading.label - text {
+    display: block;
+    margin - bottom: 2px;
+}
+.skill - mini - section {
+    margin - bottom: 16px;
+}
+.stat - card {
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    background: var(--md - sys - color - tertiary - container);
+    color: var(--md - sys - color - on - tertiary - container);
+}
+.stat - icon {
+    display: grid;
+    place - items: center;
+    flex: none;
+    width: 48px;
+    height: 48px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - tertiary);
+    color: var(--md - sys - color - on - tertiary);
+}
+.stat - card strong {
+    font: var(--ts - title - md);
+}
+.stat - card p {
+    font: var(--ts - body - sm);
+    opacity: .85;
+}
+.quote - card {
+    padding: 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline - variant);
+}
+.quote - card.material - symbols - rounded {
+    color: var(--md - sys - color - primary);
+    font - size: 32px;
+}
+.quote - card p {
+    margin: 4px 0 8px;
+    font: var(--ts - title - md);
+    font - weight: 400;
+    line - height: 1.5;
+}
+
+/* Empty state */
+.empty - state, .no - chat - selected {
+    grid - column: 1 / -1;
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    gap: 8px;
+    padding: 48px 24px;
+    text - align: center;
+}
+.empty - icon {
+    display: grid;
+    place - items: center;
+    width: 80px;
+    height: 80px;
+    margin - bottom: 8px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.empty - icon.material - symbols - rounded {
+    font - size: 36px;
+}
+.empty - state h3, .no - chat - selected h2 {
+    font: var(--ts - headline - sm);
+}
+.empty - state p, .no - chat - selected p {
+    max - width: 360px;
+    margin - bottom: 16px;
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+
+/* Requests */
+.requests - page {
+    max - width: 840px;
+    margin: 0 auto;
+}
+.requests - intro {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 16px;
+    padding: 24px 0 16px;
+}
+.tab - bar {
+    display: flex;
+    border - bottom: 1px solid var(--md - sys - color - outline - variant);
+}
+.tab {
+    flex: 1;
+    display: inline - flex;
+    align - items: center;
+    justify - content: center;
+    gap: 8px;
+    height: 48px;
+    font: var(--ts - title - sm);
+    letter - spacing: .00625rem;
+    color: var(--md - sys - color - on - surface - variant);
+    border - radius: var(--md - sys - shape - corner - md)var(--md - sys - shape - corner - md)0 0;
+}
+.tab::before {
+    border - radius: inherit;
+}
+.tab::after {
+    content: '';
+    position: absolute;
+    left: 16px;
+    right: 16px;
+    bottom: 0;
+    height: 3px;
+    border - radius: 3px 3px 0 0;
+    background: var(--md - sys - color - primary);
+    transform: scaleX(0);
+    transition: transform var(--md - motion - medium2)var(--md - motion - emphasized - decel);
+}
+.tab.active {
+    color: var(--md - sys - color - primary);
+}
+.tab.active::after {
+    transform: scaleX(1);
+}
+.tab.tab - badge {
+    min - width: 16px;
+    height: 16px;
+    padding: 0 4px;
+    display: inline - grid;
+    place - items: center;
+    border - radius: 8px;
+    background: var(--md - sys - color - error);
+    color: var(--md - sys - color - on - error);
+    font: var(--ts - label - sm);
+}
+.tab.tab - badge: empty {
+    display: none;
+}
+.request - list {
+    display: flex;
+    flex - direction: column;
+    margin - top: 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - surface - container - low);
+    overflow: hidden;
+}
+.request - list: has(.empty - state) {
+    background: none;
+}
+.request - row {
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    padding: 16px;
+}
+.request - row + .request - row {
+    box - shadow: inset 0 1px 0 var(--md - sys - color - outline - variant);
+}
+.request - person {
+    flex: 1;
+    min - width: 0;
+}
+.request - person h3 {
+    font: var(--ts - title - md);
+    letter - spacing: .009375rem;
+}
+.request - person p {
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.request - person strong {
+    font - weight: 500;
+    color: var(--md - sys - color - on - surface);
+}
+.request - actions {
+    display: flex;
+    align - items: center;
+    gap: 8px;
+    flex: none;
+}
+.privacy - note {
+    display: flex;
+    align - items: center;
+    justify - content: center;
+    gap: 8px;
+    margin - top: 24px;
+    font: var(--ts - body - sm);
+    letter - spacing: .025rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.privacy - note.material - symbols - rounded {
+    font - size: 18px;
+}
+
+/* Messages (list-detail) */
+.chat - workspace {
+    display: grid;
+    grid - template - columns: 360px minmax(0, 1fr);
+    gap: 16px;
+    height: calc(100dvh - var(--appbar - h) - 32px);
+    min - height: 440px;
+}
+.chat - sidebar, .chat - thread {
+    display: flex;
+    flex - direction: column;
+    min - height: 0;
+    border - radius: var(--md - sys - shape - corner - xl);
+    background: var(--md - sys - color - surface - container - low);
+    overflow: hidden;
+}
+.chat - thread {
+    background: var(--md - sys - color - surface - container - lowest);
+    box - shadow: inset 0 0 0 1px var(--md - sys - color - outline - variant);
+}
+.chat - sidebar - head {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    gap: 8px;
+    padding: 16px 12px 8px 24px;
+}
+.chat - sidebar - head h2 {
+    font: var(--ts - title - lg);
+}
+.chat - sidebar - head p {
+    font: var(--ts - body - sm);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.chat - list {
+    flex: 1;
+    min - height: 0;
+    overflow - y: auto;
+    padding: 8px 12px 12px;
+    display: flex;
+    flex - direction: column;
+    gap: 4px;
+}
+.chat - list - item {
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    width: 100 % ;
+    padding: 12px 16px;
+    border - radius: var(--md - sys - shape - corner - xl);
+    text - align: left;
+}
+.chat - list - item.active {
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.chat - list - copy {
+    flex: 1;
+    min - width: 0;
+    display: flex;
+    flex - direction: column;
+}
+.chat - list - copy strong {
+    font: var(--ts - title - sm);
+    letter - spacing: .00625rem;
+}
+.chat - list - copy small {
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    color: var(--md - sys - color - on - surface - variant);
+    white - space: nowrap;
+    overflow: hidden;
+    text - overflow: ellipsis;
+}
+.chat - list - item.active.chat - list - copy small {
+    color: inherit;
+    opacity: .8;
+}
+.chat - time {
+    flex: none;
+    font: var(--ts - label - sm);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.chat - list - empty {
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    gap: 8px;
+    padding: 32px 16px;
+    text - align: center;
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.chat - list - empty.material - symbols - rounded {
+    font - size: 40px;
+    color: var(--md - sys - color - primary);
+}
+.chat - exit, .thread - back {
+    display: none;
+}
+
+.thread - header {
+    flex: none;
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    padding: 12px 12px 12px 16px;
+    border - bottom: 1px solid var(--md - sys - color - outline - variant);
+}
+.thread - header > div: not(.avatar) {
+    flex: 1;
+    min - width: 0;
+    display: flex;
+    flex - direction: column;
+}
+.thread - header strong {
+    font: var(--ts - title - md);
+}
+.thread - header > div > span {
+    display: inline - flex;
+    align - items: center;
+    gap: 6px;
+    font: var(--ts - body - sm);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.thread - header > div > span.material - symbols - rounded {
+    font - size: 8px;
+    color: var(--md - sys - color - primary);
+    font - variation - settings: 'FILL' 1,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 20;
+}
+.thread - swap {
+    flex: none;
+    max - width: 40 % ;
+    overflow: hidden;
+    text - overflow: ellipsis;
+}
+.match - banner {
+    flex: none;
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    margin: 12px 16px 0;
+    padding: 12px 8px 12px 16px;
+    border - radius: var(--md - sys - shape - corner - lg);
+    background: var(--md - sys - color - tertiary - container);
+    color: var(--md - sys - color - on - tertiary - container);
+}
+.match - banner - icon {
+    display: grid;
+    place - items: center;
+    flex: none;
+    width: 40px;
+    height: 40px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - tertiary);
+    color: var(--md - sys - color - on - tertiary);
+}
+.match - banner > div: nth - child(2) {
+    flex: 1;
+    min - width: 0;
+}
+.match - banner strong {
+    font: var(--ts - title - sm);
+}
+.match - banner p {
+    font: var(--ts - body - sm);
+    letter - spacing: .025rem;
+    opacity: .88;
+}
+.match - banner.btn - text {
+    color: inherit;
+    font - weight: 700;
+    flex: none;
+}
+.message - area {
+    flex: 1;
+    min - height: 0;
+    overflow - y: auto;
+    display: flex;
+    flex - direction: column;
+    gap: 8px;
+    padding: 16px;
+    scroll - behavior: smooth;
+}
+.day - divider {
+    align - self: center;
+    margin: 4px 0 8px;
+    padding: 4px 12px;
+    border - radius: var(--md - sys - shape - corner - full);
+    background: var(--md - sys - color - surface - container);
+    font: var(--ts - label - sm);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.message - row {
+    display: flex;
+    align - items: flex - end;
+    gap: 8px;
+    max - width: 78 % ;
+}
+.message - row.own {
+    align - self: flex - end;
+    flex - direction: row - reverse;
+}
+.message - bubble {
+    padding: 10px 16px;
+    border - radius: 20px 20px 20px 4px;
+    background: var(--md - sys - color - surface - container - high);
+    color: var(--md - sys - color - on - surface);
+    overflow - wrap: anywhere;
+}
+.message - row.own.message - bubble {
+    border - radius: 20px 20px 4px 20px;
+    background: var(--md - sys - color - primary);
+    color: var(--md - sys - color - on - primary);
+}
+.message - bubble p {
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+}
+.message - bubble time {
+    display: block;
+    margin - top: 2px;
+    text - align: right;
+    font: var(--ts - label - sm);
+    letter - spacing: .03125rem;
+    opacity: .7;
+}
+.thread - empty {
+    display: flex;
+    flex - direction: column;
+    align - items: center;
+    justify - content: center;
+    gap: 4px;
+    flex: 1;
+    text - align: center;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.thread - empty > div {
+    display: grid;
+    place - items: center;
+    width: 64px;
+    height: 64px;
+    margin - bottom: 8px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.thread - empty strong {
+    font: var(--ts - title - md);
+    color: var(--md - sys - color - on - surface);
+}
+.thread - empty span {
+    font: var(--ts - body - md);
+}
+.composer {
+    flex: none;
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    padding: 12px 16px 16px;
+}
+.composer - input {
+    flex: 1;
+    min - width: 0;
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    height: 56px;
+    padding: 0 20px;
+    border - radius: var(--md - sys - shape - corner - full);
+    background: var(--md - sys - color - surface - container - high);
+    color: var(--md - sys - color - on - surface - variant);
+    transition: box - shadow var(--md - motion - short4)var(--md - motion - standard);
+}
+.composer - input: focus - within {
+    box - shadow: inset 0 0 0 2px var(--md - sys - color - primary);
+}
+.composer - input input {
+    flex: 1;
+    min - width: 0;
+    height: 100 % ;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    font: var(--ts - body - lg);
+    letter - spacing: .03125rem;
+    color: var(--md - sys - color - on - surface);
+}
+.composer - input input::placeholder {
+    color: var(--md - sys - color - on - surface - variant);
+}
+.send - button {
+    width: 56px;
+    height: 56px;
+    border - radius: var(--md - sys - shape - corner - lg);
+}
+.auth - submit, .google - button {
+    height: 48px;
+}
+
+/* Profile */
+.profile - page {
+    max - width: 840px;
+    margin: 0 auto;
+    border - radius: var(--md - sys - shape - corner - xl);
+    background: var(--md - sys - color - surface - container - low);
+    overflow: hidden;
+}
+.profile - cover {
+    position: relative;
+    height: 128px;
+    background: var(--md - sys - color - primary - container);
+    color: var(--md - sys - color - on - primary - container);
+    overflow: hidden;
+}
+.profile - cover::before {
+    content: '';
+    position: absolute;
+    width: 260px;
+    height: 260px;
+    right: -60px;
+    top: -120px;
+    border - radius: 40 % ;
+    background: var(--md - sys - color - primary);
+    opacity: .14;
+    transform: rotate(20deg);
+}
+.profile - cover::after {
+    content: '';
+    position: absolute;
+    width: 140px;
+    height: 140px;
+    right: 140px;
+    bottom: -80px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - primary);
+    opacity: .1;
+}
+.profile - cover > span {
+    position: absolute;
+    left: 24px;
+    top: 16px;
+    display: inline - flex;
+    align - items: center;
+    gap: 8px;
+    font: var(--ts - label - md);
+    letter - spacing: .03125rem;
+}
+.profile - cover.material - symbols - rounded {
+    font - size: 18px;
+}
+.profile - form {
+    padding: 0 24px 24px;
+}
+.profile - form - top {
+    display: flex;
+    align - items: flex - start;
+    flex - wrap: wrap;
+    gap: 16px;
+    padding - top: 12px;
+    margin - bottom: 24px;
+}
+.profile - form - top.avatar - profile {
+    position: relative;
+    z - index: 1;
+    margin - top: -56px;
+}
+.profile - form - top > div: nth - child(2) {
+    flex: 1;
+    min - width: 160px;
+    padding - top: 4px;
+}
+.profile - form - top > .btn {
+    margin - top: 4px;
+}
+.profile - form - top h2 {
+    font: var(--ts - headline - sm);
+}
+.profile - form - top > div span {
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.form - section {
+    --field - bg: var(--md - sys - color - surface - container - low);
+    padding: 24px 0;
+    border - top: 1px solid var(--md - sys - color - outline - variant);
+}
+.profile - form.tf {
+    --field - bg: var(--md - sys - color - surface - container - low);
+}
+.form - section - heading {
+    margin - bottom: 20px;
+}
+.form - section - heading h3 {
+    font: var(--ts - title - lg);
+}
+.form - section - heading p {
+    margin - top: 2px;
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.profile - fields {
+    display: grid;
+    grid - template - columns: 1fr 1fr;
+    gap: 20px;
+}
+.profile - fields.full {
+    grid - column: 1 / -1;
+}
+.profile - footer {
+    display: flex;
+    align - items: center;
+    justify - content: space - between;
+    flex - wrap: wrap;
+    gap: 8px 16px;
+    padding - top: 16px;
+    border - top: 1px solid var(--md - sys - color - outline - variant);
+    font: var(--ts - body - sm);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.profile - footer > span {
+    display: inline - flex;
+    align - items: center;
+    gap: 8px;
+}
+.profile - footer.material - symbols - rounded {
+    font - size: 18px;
+}
+
+/* Dialogs */
+.modal - backdrop {
+    position: fixed;
+    inset: 0;
+    z - index: 100;
+    display: grid;
+    place - items: center;
+    padding: 24px;
+    background: color - mix(in srgb, var(--md - sys - color - scrim)32 % , transparent);
+    animation: scrim - in var(--md - motion - short4)linear both;
+}
+.modal - card {
+    --field - bg: var(--md - sys - color - surface - container - high);
+    position: relative;
+    width: 100 % ;
+    max - width: 560px;
+    max - height: calc(100dvh - 48px);
+    overflow - y: auto;
+    padding: 24px;
+    border - radius: var(--md - sys - shape - corner - xl);
+    background: var(--md - sys - color - surface - container - high);
+    box - shadow: var(--md - sys - elevation - 3);
+    animation: dialog - in var(--md - motion - medium4)var(--md - motion - emphasized - decel)both;
+}
+.modal - card.tf {
+    --field - bg: var(--md - sys - color - surface - container - high);
+}
+.modal - icon {
+    display: grid;
+    place - items: center;
+    width: 40px;
+    height: 40px;
+    margin - bottom: 16px;
+    border - radius: 50 % ;
+    background: var(--md - sys - color - secondary - container);
+    color: var(--md - sys - color - on - secondary - container);
+}
+.modal - card.label - text {
+    display: block;
+    margin - bottom: 4px;
+}
+.modal - card h2 {
+    font: var(--ts - headline - sm);
+    margin - bottom: 8px;
+}
+.modal - lead {
+    margin - bottom: 24px;
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.swap - arrow {
+    display: grid;
+    place - items: center;
+    margin: -8px 0;
+    color: var(--md - sys - color - primary);
+}
+.swap - arrow.material - symbols - rounded {
+    transform: rotate(90deg);
+}
+.schedule - fields {
+    display: grid;
+    grid - template - columns: 1fr 1fr;
+    gap: 20px;
+}
+.dialog - actions {
+    display: flex;
+    justify - content: flex - end;
+    flex - wrap: wrap;
+    gap: 8px;
+    margin - top: 24px;
+}
+.modal - footnote {
+    display: flex;
+    align - items: center;
+    gap: 8px;
+    margin - top: 16px;
+    font: var(--ts - body - sm);
+    letter - spacing: .025rem;
+    color: var(--md - sys - color - on - surface - variant);
+}
+.modal - footnote.material - symbols - rounded {
+    font - size: 16px;
+}
+.details - top {
+    display: flex;
+    align - items: center;
+    gap: 16px;
+    margin - bottom: 16px;
+}
+.details - top h2 {
+    margin: 0;
+    padding: 0;
+}
+.details - top p {
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.details - bio {
+    margin - bottom: 20px;
+    font: var(--ts - body - lg);
+}
+.availability - line {
+    display: flex;
+    align - items: center;
+    gap: 8px;
+    margin - top: 8px;
+    font: var(--ts - body - md);
+    color: var(--md - sys - color - on - surface - variant);
+}
+.availability - line.material - symbols - rounded {
+    font - size: 20px;
+}
+ @ keyframes scrim - in {
+    from {
+        opacity: 0;
+    }
+}
+ @ keyframes dialog - in {
+    from {
+        opacity: 0;
+        transform: translateY(24px)scale(.94);
+    }
+}
+
+/* Snackbar */
+.toast - region {
+    position: fixed;
+    left: 24px;
+    bottom: 24px;
+    z - index: 200;
+    max - width: calc(100vw - 48px);
+    pointer - events: none;
+}
+.toast {
+    display: flex;
+    align - items: center;
+    gap: 12px;
+    min - height: 48px;
+    max - width: 560px;
+    padding: 12px 16px;
+    border - radius: var(--md - sys - shape - corner - xs);
+    background: var(--md - sys - color - inverse - surface);
+    color: var(--md - sys - color - inverse - on - surface);
+    box - shadow: var(--md - sys - elevation - 3);
+    font: var(--ts - body - md);
+    letter - spacing: .015625rem;
+    animation: snack - in var(--md - motion - medium2)var(--md - motion - emphasized - decel)both;
+    pointer - events: auto;
+}
+.toast.material - symbols - rounded {
+    font - size: 20px;
+    color: var(--md - sys - color - inverse - primary);
+}
+.toast.error {
+    background: var(--md - sys - color - error - container);
+    color: var(--md - sys - color - on - error - container);
+}
+.toast.error.material - symbols - rounded {
+    color: var(--md - sys - color - error);
+}
+ @ keyframes snack - in {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+}
+
+/*
+Adaptive layout (Material window size classes)
+*/
+
+/* Expanded + large: standard navigation drawer */
+ @ media(min - width: 1240px) {
+    .nav - rail {
+        width: 300px;
+        align - items: stretch;
+        padding: 24px 12px;
+        gap: 24px;
+    }
+    .nav - brand {
+        padding: 0 16px;
+    }
+    .nav - brand.brand - name {
+        display: inline;
+    }
+    .nav - list {
+        align - items: stretch;
+        gap: 0;
+    }
+    .nav - item {
+        flex - direction: row;
+        gap: 12px;
+        height: 56px;
+        padding: 0 16px;
+        border - radius: var(--md - sys - shape - corner - full);
+        font: var(--ts - label - lg);
+        letter - spacing: .00625rem;
+    }
+    .nav - item::before {
+        display: block;
+    }
+    .nav - item.active {
+        background: var(--md - sys - color - secondary - container);
+        color: var(--md - sys - color - on - secondary - container);
+    }
+    .nav - item.nav - indicator {
+        width: 24px;
+        height: 24px;
+        background: none!important;
+    }
+    .nav - item.nav - indicator::before {
+        display: none;
+    }
+    .nav - indicator.badge {
+        display: none;
+    }
+    .nav - count {
+        display: grid;
+        place - items: center;
+        margin - left: auto;
+        min - width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border - radius: 10px;
+        background: var(--md - sys - color - error);
+        color: var(--md - sys - color - on - error);
+        font: var(--ts - label - sm);
+    }
+    .nav - fab - label {
+        display: inline;
+    }
+    .nav - fab {
+        align - self: flex - start;
+        margin - left: 4px;
+    }
+}
+
+/* Medium and down: tighten, 2-col forms stay */
+ @ media(max - width: 1099px) {
+    .discover - layout {
+        grid - template - columns: minmax(0, 1fr);
+    }
+    .discover - aside {
+        position: static;
+        grid - template - columns: repeat(2, minmax(0, 1fr));
+    }
+    .discover - aside.your - skills - card {
+        grid - row: span 2;
+    }
+    .quote - card {
+        display: none;
+    }
+}
+
+/* Compact: bottom navigation bar, single pane */
+ @ media(max - width: 839px) {
+    .nav - rail {
+        display: none;
+    }
+    .nav - bar {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z - index: 30;
+        display: flex;
+        align - items: stretch;
+        justify - content: space - around;
+        height: var(--navbar - h);
+        padding: 12px 8px 16px;
+        background: var(--md - sys - color - surface - container);
+    }
+    .nav - bar.nav - item {
+        flex: 1;
+        width: auto;
+    }
+    .nav - bar.nav - item::before {
+        display: none;
+    }
+    .app - body {
+        padding - bottom: var(--navbar - h);
+    }
+    .top - app - bar {
+        padding: 0 8px 0 16px;
+    }
+    .top - app - bar.brand - mark {
+        display: block;
+    }
+    .main - content {
+        padding: 8px 16px 24px;
+    }
+    .toast - region {
+        left: 16px;
+        right: 16px;
+        bottom: calc(var(--navbar - h) + 16px);
+        max - width: none;
+    }
+
+    .hero {
+        min - height: 0;
+        padding: 24px;
+        border - radius: var(--md - sys - shape - corner - lg);
+    }
+    .hero - art {
+        display: none;
+    }
+    .hero - copy h2 {
+        font: var(--ts - headline - sm);
+    }
+    .student - grid {
+        grid - template - columns: minmax(0, 1fr);
+    }
+    .discover - aside {
+        grid - template - columns: minmax(0, 1fr);
+    }
+    .discover - aside.your - skills - card {
+        grid - row: auto;
+    }
+
+    .request - row {
+        flex - wrap: wrap;
+    }
+    .request - actions,
+    .request - row > .btn,
+    .request - row > .chip {
+        margin - left: 56px;
+    }
+    .request - person {
+        flex - basis: calc(100 %  - 60px);
+    }
+
+    /* Chats become an edge-to-edge, full-screen flow on compact devices. */
+    .chat - app - shell {
+        height: 100dvh;
+        min - height: 100dvh;
+        overflow: hidden;
+    }
+    .chat - app - shell.top - app - bar,
+    .chat - app - shell.nav - bar {
+        display: none;
+    }
+    .chat - app - shell.app - body {
+        height: 100dvh;
+        min - height: 0;
+        padding - bottom: 0;
+        overflow: hidden;
+    }
+    .chat - app - shell.main - content.chat - main - content {
+        flex: 1;
+        min - height: 0;
+        overflow: hidden;
+        padding: 0;
+    }
+    .chat - app - shell.main - inner {
+        height: 100 % ;
+        max - width: none;
+        margin: 0;
+    }
+    .chat - workspace {
+        grid - template - columns: minmax(0, 1fr);
+        grid - template - rows: minmax(0, 1fr);
+        gap: 0;
+        height: 100 % ;
+        min - height: 0;
+    }
+    .chat - workspace.list - mode.chat - sidebar {
+        display: flex;
+    }
+    .chat - workspace.list - mode.chat - thread,
+    .chat - workspace: not(.list - mode).chat - sidebar {
+        display: none;
+    }
+    .chat - workspace: not(.list - mode).chat - thread {
+        display: flex;
+        border - radius: 0;
+    }
+    .chat - sidebar,
+    .chat - thread {
+        border - radius: 0;
+    }
+    .chat - sidebar - head {
+        padding: max(12px, env(safe - area - inset - top))12px 8px;
+    }
+    .chat - sidebar - head > div {
+        flex: 1;
+    }
+    .chat - exit {
+        display: inline - grid;
+    }
+    .chat - list {
+        flex - direction: column;
+        overflow - x: hidden;
+        overflow - y: auto;
+        padding: 8px 12px calc(12px + env(safe - area - inset - bottom));
+    }
+    .chat - list - item {
+        width: 100 % ;
+        flex: none;
+        max - width: none;
+        padding: 12px 16px;
+        border - radius: var(--md - sys - shape - corner - lg);
+    }
+    .chat - thread {
+        box - shadow: none;
+    }
+    .thread - swap {
+        display: none;
+    }
+    .match - banner {
+        gap: 12px;
+        padding: 8px 8px 8px 12px;
+    }
+    .match - banner - icon {
+        display: none;
+    }
+    .match - banner p {
+        display: none;
+    }
+    .thread - header {
+        gap: 8px;
+        padding: max(8px, env(safe - area - inset - top))8px 8px;
+    }
+    .thread - back {
+        display: inline - grid;
+    }
+    .composer {
+        padding: 12px 12px calc(12px + env(safe - area - inset - bottom));
+    }
+    .message - row {
+        max - width: 88 % ;
+    }
+
+    .profile - page {
+        border - radius: var(--md - sys - shape - corner - lg);
+    }
+    .profile - fields,
+    .schedule - fields {
+        grid - template - columns: minmax(0, 1fr);
+    }
+    .profile - form {
+        padding: 0 16px 16px;
+    }
+    .profile - form - top.btn {
+        width: 100 % ;
+    }
+
+    /* auth stacks */
+    .auth - layout {
+        grid - template - columns: minmax(0, 1fr);
+    }
+    .auth - story {
+        display: none;
+    }
+    .auth - mobile - brand {
+        display: inline - flex;
+    }
+    .auth - panel {
+        justify - content: flex - start;
+        padding: 64px 24px 32px;
+    }
+
+    .modal - backdrop {
+        align - items: end;
+        padding: 0;
+    }
+    .modal - card {
+        max - width: none;
+        max - height: 92dvh;
+        border - radius: var(--md - sys - shape - corner - xl)var(--md - sys - shape - corner - xl)0 0;
+        animation - name: sheet - in;
+    }
+}
+ @ keyframes sheet - in {
+    from {
+        transform: translateY(40px);
+        opacity: 0;
+    }
+}
+
+ @ media(min - width: 840px)and(max - width: 1239px) {
+    .chat - workspace {
+        grid - template - columns: 300px minmax(0, 1fr);
+    }
+}
+
+ @ media(max - width: 420px) {
+    .person - card - bottom {
+        flex - wrap: wrap;
+    }
+    .person - card - bottom.btn {
+        margin - left: auto;
+    }
+}
+
+ @ media(prefers - reduced - motion: reduce) {
+     * ,
+     * ::before,
+     * ::after {
+        animation - duration: .01ms!important;
+        transition - duration: .01ms!important;
+        scroll - behavior: auto!important;
+    }
+}

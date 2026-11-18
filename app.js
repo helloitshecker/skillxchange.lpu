@@ -3,6 +3,7 @@ import {
   LoadingManager,
   setupLinkInterceptor,
 } from "./router.js?v=m10";
+import { analyzeSkill, matchProfiles, sharedSkills } from "./skills.js?v=m1";
 
 let supabase = null;
 let cloudUser = null;
@@ -213,6 +214,7 @@ const state = {
   messages: {},
   activeConversation: null,
   chatListOpen: false,
+  chatScrollReset: true,
   quotes: fallbackQuotes,
   quoteIndex: 0,
   currentQuote: fallbackQuotes[0],
@@ -225,6 +227,7 @@ const state = {
   gifRequestId: 0,
   search: "",
   category: "All",
+  sort: "match",
   modal: "",
   modalPerson: null,
   deleteTarget: null,
@@ -315,20 +318,40 @@ function avatar(person, size = "") {
 }
 
 function matchingSkills(person) {
-  const offers = state.profile?.offers || [];
-  const wants = state.profile?.wants || [];
-  const theyCanTeach = (person.offers || []).find((skill) =>
-    wants.some((want) => want.toLowerCase() === skill.toLowerCase()),
-  );
-  const youCanTeach = offers.find((skill) =>
-    (person.wants || []).some(
-      (want) => want.toLowerCase() === skill.toLowerCase(),
-    ),
+  const me = state.profile || {};
+  const match = matchProfiles(
+    { offers: me.offers || [], wants: me.wants || [] },
+    { offers: person.offers || [], wants: person.wants || [] },
   );
   return {
-    theyCanTeach,
-    youCanTeach,
+    theyCanTeach: match.theyTeach.score >= 0.6 ? match.theyTeach.skill : null,
+    youCanTeach: match.youTeach.score >= 0.6 ? match.youTeach.skill : null,
+    rawTheyTeach: match.theyTeach.b,
+    rawYouTeach: match.youTeach.a,
+    theyTeach: match.theyTeach,
+    youTeach: match.youTeach,
+    sharedWant: match.sharedWant,
+    sharedOffer: match.sharedOffer,
+    match,
   };
+}
+
+function relationNote(pair, owner = "your") {
+  if (!pair || pair.score < 0.6) return "";
+  if (pair.type === "same" || pair.type === "phrase") return "";
+  const target =
+    owner === "their"
+      ? pair.bSkill || pair.b
+      : pair.aSkill || pair.a;
+  const kind =
+    pair.type === "broader"
+      ? "covers"
+      : pair.type === "family"
+        ? "similar to"
+        : pair.type === "fuzzy"
+          ? "close to"
+          : "related to";
+  return ` <span class="match-kind">— ${kind} ${owner} ${esc(target)}</span>`;
 }
 
 function chipList(skills, style = "outline") {
@@ -481,9 +504,8 @@ function navItem([page, label, glyph], pending) {
   return `<button class="nav-item ${active ? "active" : ""}" data-action="navigate" data-page="${page}" ${active ? 'aria-current="page"' : ""}><span class="nav-indicator">${activeIcon}${count ? `<span class="badge">${count}</span>` : ""}</span><span class="nav-label">${label}</span>${count ? `<span class="nav-count">${count}</span>` : ""}</button>`;
 }
 
-function personCard(person) {
-  const match = matchingSkills(person);
-  const isMatch = match.theyCanTeach && match.youCanTeach;
+function personCard(person, info = matchingSkills(person)) {
+  const isMatch = info.match.mutual;
   const existingRequest = state.requests.find(
     (request) =>
       request.personId === person.id &&
@@ -493,13 +515,46 @@ function personCard(person) {
   const existingChat = state.conversations.find(
     (conversation) => conversation.personId === person.id,
   );
-  const matchText = isMatch
-    ? `They can teach you <strong>${esc(match.theyCanTeach)}</strong>. You can teach them <strong>${esc(match.youCanTeach)}</strong>.`
-    : match.theyCanTeach
-      ? `They can teach you <strong>${esc(match.theyCanTeach)}</strong> — a great place to start.`
-      : match.youCanTeach
-        ? `You could help them learn <strong>${esc(match.youCanTeach)}</strong>. See what else you can swap.`
-        : "A new campus connection starts with a conversation.";
+  let matchText;
+  if (isMatch) {
+    matchText = `They can teach you <strong>${esc(info.theyCanTeach)}</strong>${relationNote(info.theyTeach)}. You can teach them <strong>${esc(info.youCanTeach)}</strong>${relationNote(info.youTeach, "their")}.`;
+  } else if (info.theyCanTeach) {
+    matchText = `They can teach you <strong>${esc(info.theyCanTeach)}</strong>${relationNote(info.theyTeach)}.`;
+  } else if (info.youCanTeach) {
+    matchText = `You could help them learn <strong>${esc(info.youCanTeach)}</strong>${relationNote(info.youTeach, "their")}.`;
+  } else if (info.sharedWant.score >= 0.7) {
+    const shared = sharedSkills(state.profile?.wants, person.wants);
+    const names = shared.map((skill) => esc(skill.label));
+    const joined =
+      names.length > 1
+        ? `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`
+        : names[0];
+    matchText = `You are both learning <strong>${joined}</strong>. Study partners, maybe?`;
+  } else {
+    const options = [
+      { pair: info.theyTeach, kind: "teach" },
+      { pair: info.youTeach, kind: "learn" },
+      { pair: info.sharedWant, kind: "want" },
+      { pair: info.sharedOffer, kind: "offer" },
+    ];
+    options.sort((left, right) => right.pair.score - left.pair.score);
+    const top = options[0];
+    if (top.pair.score >= 0.5 && top.kind === "teach") {
+      matchText = `They offer <strong>${esc(top.pair.bSkill || top.pair.b)}</strong>, similar to your <strong>${esc(top.pair.aSkill || top.pair.a)}</strong>.`;
+    } else if (top.pair.score >= 0.5 && top.kind === "learn") {
+      matchText = `They want to learn <strong>${esc(top.pair.bSkill || top.pair.b)}</strong>; you offer <strong>${esc(top.pair.aSkill || top.pair.a)}</strong>, a similar skill.`;
+    } else if (top.pair.score >= 0.5 && top.kind === "want") {
+      matchText = `You are both interested in <strong>${esc(top.pair.aSkill || top.pair.a)}</strong>.`;
+    } else if (top.pair.score >= 0.5 && top.kind === "offer") {
+      matchText = `You both teach <strong>${esc(top.pair.aSkill || top.pair.a)}</strong> and <strong>${esc(top.pair.bSkill || top.pair.b)}</strong>.`;
+    } else {
+      matchText =
+        "A new campus connection starts with a conversation.";
+    }
+  }
+  const score = info.match.score > 0
+    ? `<span class="match-score" title="Skill match strength">${info.match.score}%</span>`
+    : "";
   const cta = existingChat
     ? `<button class="btn btn-tonal" data-action="open-person-chat" data-person="${esc(person.id)}">${icon("chat_bubble")}Open chat</button>`
     : existingRequest
@@ -508,7 +563,7 @@ function personCard(person) {
   return `<article class="person-card">
     <div class="person-card-top"><div class="person-identity">${avatar(person, "avatar-large")}<div><div class="person-name-line"><h2>${esc(person.name)}</h2>${person.year ? `<span class="year-tag">${esc(person.year)}</span>` : ""}</div><p>${esc(person.program || "Campus student")}</p></div></div><button class="icon-btn" data-action="person-details" data-person="${esc(person.id)}" aria-label="View ${esc(person.name)}'s profile">${icon("more_vert")}</button></div>
     <div class="skill-columns"><div><span class="label-text">Can teach</span><div class="chips">${chipList(person.offers, "filled")}</div></div><div><span class="label-text">Wants to learn</span><div class="chips">${chipList(person.wants, "outline")}</div></div></div>
-    <div class="match-note">${icon(isMatch ? "auto_awesome" : "handshake")}<span>${matchText}</span></div>
+    <div class="match-note">${icon(isMatch ? "auto_awesome" : info.sharedWant.score >= 0.7 ? "groups" : "handshake")}<span class="match-copy">${matchText}</span>${score}</div>
     <div class="person-card-bottom"><span class="availability">${icon("schedule")} ${esc((person.availability || ["Flexible"])[0])}</span>${cta}</div>
   </article>`;
 }
@@ -570,6 +625,46 @@ async function loadQuoteCollection() {
   }
 }
 
+const CATEGORY_SKILLS = {
+  Design: [
+    "design",
+    "photoshop",
+    "illustrator",
+    "figma",
+    "sketching",
+    "animation",
+    "blender",
+    "maya",
+    "level-design",
+  ],
+  Coding: [
+    "programming",
+    "python",
+    "c",
+    "cpp",
+    "csharp",
+    "java",
+    "javascript",
+    "rust",
+    "sql",
+    "opengl",
+    "ai",
+    "cybersecurity",
+    "network-security",
+  ],
+  Music: ["music", "guitar", "ukulele", "singing"],
+  Languages: [
+    "japanese",
+    "german",
+    "french",
+    "italian",
+    "spanish",
+    "korean",
+    "mandarin",
+  ],
+  Academics: ["excel", "communication", "presentation", "brainstorming"],
+};
+
 function discoverPage() {
   const categories = [
     "All",
@@ -580,30 +675,40 @@ function discoverPage() {
     "Academics",
   ];
   const filtered = state.people.filter((person) => {
+    const skills = [...(person.offers || []), ...(person.wants || [])];
+    const concepts = new Set(
+      skills.flatMap((skill) => analyzeSkill(skill).map((hit) => hit.id)),
+    );
+    const categorySkills = CATEGORY_SKILLS[state.category] || [];
     const matchesCategory =
       state.category === "All" ||
       person.category === state.category ||
-      [...(person.offers || []), ...(person.wants || [])].some((skill) =>
+      categorySkills.some((id) => concepts.has(id)) ||
+      skills.some((skill) =>
         skill.toLowerCase().includes(state.category.toLowerCase()),
       );
     const query = state.search.trim().toLowerCase();
     const matchesQuery =
       !query ||
-      [
-        person.name,
-        person.program,
-        ...(person.offers || []),
-        ...(person.wants || []),
-      ]
+      [person.name, person.program, ...skills]
         .join(" ")
         .toLowerCase()
         .includes(query);
     return matchesCategory && matchesQuery;
   });
-  const best = filtered.filter(
-    (person) =>
-      matchingSkills(person).theyCanTeach && matchingSkills(person).youCanTeach,
-  ).length;
+  const ranked = filtered
+    .map((person) => ({ person, info: matchingSkills(person) }))
+    .sort((left, right) => {
+      const age = (entry) => new Date(entry.person.createdAt || 0).getTime();
+      if (state.sort === "newest") {
+        return age(right) - age(left) || right.info.match.score - left.info.match.score;
+      }
+      return (
+        right.info.match.score - left.info.match.score ||
+        age(right) - age(left)
+      );
+    });
+  const best = ranked.filter((entry) => entry.info.match.mutual).length;
   const hero = state.heroDismissed
     ? ""
     : `<div class="hero"><button class="icon-btn hero-dismiss" type="button" data-action="dismiss-hero" aria-label="Remove this welcome card" title="Remove this card">${icon("close")}</button><div class="hero-copy"><span class="label-text">A little know-how goes a long way</span><h2>What do you want to <em>learn this semester?</em></h2><p>Find a peer who can teach it. Offer something you know in return.</p></div><div class="hero-art" aria-hidden="true">${icon("school")}</div></div>`;
@@ -617,8 +722,8 @@ function discoverPage() {
       })
       .join(
         "",
-      )}</div><span class="result-count">${filtered.length} ${filtered.length === 1 ? "student" : "students"}</span></div>
-    <div class="student-grid">${filtered.length ? filtered.map(personCard).join("") : `<div class="empty-state"><div class="empty-icon">${icon("search_off")}</div><h3>No peers found yet</h3><p>Try another skill or category. The right learning partner is out there.</p><button class="btn btn-tonal" data-action="clear-filters">Clear filters</button></div>`}</div>
+      )}</div><div class="filter-tools"><button class="chip sort-chip" type="button" data-action="toggle-sort" aria-label="Sort students">${icon(state.sort === "match" ? "auto_awesome" : "schedule")}${state.sort === "match" ? "Best match" : "Newest"}</button><span class="result-count">${ranked.length} ${ranked.length === 1 ? "student" : "students"}</span></div></div>
+    <div class="student-grid">${ranked.length ? ranked.map((entry) => personCard(entry.person, entry.info)).join("") : `<div class="empty-state"><div class="empty-icon">${icon("search_off")}</div><h3>No peers found yet</h3><p>Try another skill or category. The right learning partner is out there.</p><button class="btn btn-tonal" data-action="clear-filters">Clear filters</button></div>`}</div>
     </section><aside class="discover-aside"><div class="aside-card your-skills-card"><div class="aside-heading"><div><span class="label-text">Your learning profile</span><h3>Your skill mix</h3></div><button class="icon-btn" data-action="navigate" data-page="profile" aria-label="Edit your profile">${icon("edit")}</button></div><div class="skill-mini-section"><span class="label-text">You can teach</span><div class="chips">${chipList(state.profile?.offers, "filled")}</div></div><div class="skill-mini-section"><span class="label-text">You want to learn</span><div class="chips">${chipList(state.profile?.wants, "outline")}</div></div><button class="btn btn-text" data-action="navigate" data-page="profile">Edit your skills</button></div>
        <div class="aside-card stat-card"><div class="stat-icon">${icon("auto_awesome")}</div><div><strong>${best} good ${best === 1 ? "match" : "matches"}</strong><p>Based on what you want to learn and share.</p></div></div><div class="quote-card">${icon("format_quote", "filled-icon")}<button class="icon-btn quote-next" type="button" data-action="next-quote" aria-label="Show another quote" title="Show another quote">${icon("autorenew")}</button><div class="quote-copy" aria-live="polite" aria-atomic="true"><p class="quote-text">${esc(state.currentQuote.quote)}</p><span class="label-text quote-author">${esc(state.currentQuote.author || "Unknown author")}</span></div></div></aside></div>`;
 }
@@ -847,8 +952,8 @@ function modalView() {
         "modal-title",
       );
     }
-    const preferredGive = match.youCanTeach || myOffers[0] || "";
-    const preferredGet = match.theyCanTeach || theirOffers[0] || "";
+    const preferredGive = match.rawYouTeach || myOffers[0] || "";
+    const preferredGet = match.rawTheyTeach || theirOffers[0] || "";
     const options = (list, chosen) =>
       list
         .map(
@@ -1098,10 +1203,30 @@ function formatTime(value) {
 function render() {
   setTheme(state.theme);
   const root = document.getElementById("app");
+  const previousArea = document.getElementById("message-area");
+  const previousScroll = previousArea ? previousArea.scrollTop : null;
+  const wasAtBottom =
+    previousArea !== null &&
+    previousArea.scrollHeight -
+      previousArea.scrollTop -
+      previousArea.clientHeight <
+      40;
+  const resetScroll = state.chatScrollReset;
+  state.chatScrollReset = false;
+
   root.innerHTML = state.mode === "app" ? appView() : authView();
+
   if (state.page === "chats") {
     const area = document.getElementById("message-area");
-    if (area) area.scrollTop = area.scrollHeight;
+    if (area) {
+      const toBottom =
+        resetScroll || previousScroll === null || wasAtBottom;
+      const target = toBottom ? area.scrollHeight : previousScroll;
+      area.scrollTop = target;
+      requestAnimationFrame(() => {
+        area.scrollTop = toBottom ? area.scrollHeight : target;
+      });
+    }
   }
   if (state.mode === "app" && state.page === "discover") loadQuoteCollection();
 }
@@ -1169,6 +1294,7 @@ function profileFromRow(row) {
     wants: row.wants || [],
     availability: row.availability || [],
     avatarUrl: row.avatar_url || "",
+    createdAt: row.created_at || "",
     color: "mint",
   };
 }
@@ -1607,7 +1733,11 @@ function appendMessageToChat(message, conversationId, forceScroll = false) {
     name: "Campus student",
   };
   area.insertAdjacentHTML("beforeend", messageRowMarkup(message, person));
-  if (forceScroll || wasNearBottom) area.scrollTop = area.scrollHeight;
+  if (forceScroll) {
+    area.scrollTop = area.scrollHeight;
+  } else if (wasNearBottom) {
+    area.scrollTo({ top: area.scrollHeight, behavior: "smooth" });
+  }
 }
 
 async function saveProfile(form) {
@@ -1959,6 +2089,10 @@ document.addEventListener("click", async (event) => {
     state.category = button.dataset.category;
     render();
   }
+  if (action === "toggle-sort") {
+    state.sort = state.sort === "match" ? "newest" : "match";
+    render();
+  }
   if (action === "next-quote") showNextQuote();
   if (action === "dismiss-hero") {
     state.heroDismissed = true;
@@ -2047,6 +2181,7 @@ document.addEventListener("click", async (event) => {
     if (router.path === `/chat/${personId}`) {
       state.activeConversation = conversation.id;
       state.chatListOpen = false;
+      state.chatScrollReset = true;
       render();
       subscribeToMessages();
     } else {
@@ -2159,6 +2294,7 @@ router
       if (!ensureApp()) return;
       state.page = "chats";
       state.chatListOpen = true;
+      state.chatScrollReset = true;
       render();
       subscribeToMessages();
     },
@@ -2179,6 +2315,7 @@ router
       }
       state.page = "chats";
       state.chatListOpen = false;
+      state.chatScrollReset = true;
       state.activeConversation = conversation.id;
       render();
       subscribeToMessages();

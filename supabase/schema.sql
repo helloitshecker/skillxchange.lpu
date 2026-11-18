@@ -18,6 +18,24 @@ create table if not exists public.profiles (
 
 alter table public.profiles add column if not exists avatar_url text not null default '';
 
+-- Copy Google profile photos from auth metadata into profiles for accounts
+-- that signed in before avatar_url existed. Safe to rerun.
+update public.profiles p
+set avatar_url = coalesce(
+  nullif(u.raw_user_meta_data ->> 'avatar_url', ''),
+  nullif(u.raw_user_meta_data ->> 'picture', '')
+)
+from auth.users u
+where u.id = p.id
+  and coalesce(
+    nullif(u.raw_user_meta_data ->> 'avatar_url', ''),
+    nullif(u.raw_user_meta_data ->> 'picture', '')
+  ) is not null
+  and p.avatar_url is distinct from coalesce(
+    nullif(u.raw_user_meta_data ->> 'avatar_url', ''),
+    nullif(u.raw_user_meta_data ->> 'picture', '')
+  );
+
 create table if not exists public.swap_requests (
   id uuid primary key default gen_random_uuid(),
   from_user uuid not null references public.profiles(id) on delete cascade,
